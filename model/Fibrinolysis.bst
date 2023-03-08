@@ -6,7 +6,7 @@
 #static::end
 
 #dynamic::start
-    FII,FI,FIIa,FIa,FDP,Plgn,Plasmin,FIIa_inactive,MCF
+    FII,FI,FIIa,FIa,FDP,Plgn,Plasmin,FIIa_inactive,CF
 #dynamic::end
 
 #structure::start

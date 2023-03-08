@@ -13,6 +13,6 @@ function amplitude(time::Float64,fibrin::Float64,tPA::Float64,FIIa::Float64)::Fl
        a1 = 0 
     end
     
-    MCF = a0 + a1*(fx^2/(fx^2+kx^2))
-    return MCF
+    CF = a0 + a1*(fx^2/(fx^2+kx^2))
+    return CF
 end
