@@ -37,7 +37,7 @@ for i ∈ 1:10
     xₒ[2] = training_df[i, :Fbgn]    # 2 FI / Fbgn
     xₒ[3] = (1e-14)*SF               # 3 FIIa
     xₒ[6] = training_df[i, :Plgn]    # 4 Plgn
-    xₒ[9] = 1.5                      # 9 MCF
+    xₒ[9] = 1.5                      # 9 CF
     dd.initial_condition_array = xₒ
 
     #update α -
