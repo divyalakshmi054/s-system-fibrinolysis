@@ -10,7 +10,7 @@ using Statistics
 using LinearAlgebra
 
 # load the actual data -
-path_to_experimental_data = joinpath(_PATH_TO_DATA, "Training-Thrombin-TF-Hormones-Fibrinolysis.csv")
+path_to_experimental_data = joinpath(_PATH_TO_DATA, "Training-Composition.csv")
 full_df = CSV.read(path_to_experimental_data, DataFrame)
 
 # what are the col names? (exclude subject id and visit id)
@@ -24,9 +24,9 @@ number_of_fields = length(data_col_symbols)
 # sample -
 number_of_synthetic_samples = 1000
 data_array = Matrix(full_df[!, 3:end])
-μ = mean(data_array,dims=1)
+μ = mean(data_array, dims = 1)
 Σ = cov(data_array)
-D = MvNormal(reshape(μ,32), Σ)
+D = MvNormal(reshape(μ,18), Σ)
 synthetic_sampled_data = rand(D, number_of_synthetic_samples)
 
 # create a new data frame -
@@ -54,11 +54,11 @@ scale_factor_dict[:XI] = (1e-8)*SF
 scale_factor_dict[:XII] = (1e-8)*SF
 scale_factor_dict[:AT] = (3.4e-6)*SF
 scale_factor_dict[:PC] = (6.3e-8)*SF
-scale_factor_dict[:TFPI] = 1.0
-scale_factor_dict[:Fbgn] = 1.0
+scale_factor_dict[:TFPI] = 0.029*SF
+scale_factor_dict[:Fbgn] = (8.8e-6)*SF
 scale_factor_dict[:Plgn] = (2e-6)*SF
 scale_factor_dict[:TAFI] = 75.0 #re-check
-scale_factor_dict[:PAI1] = 1.0
+#scale_factor_dict[:PAI1] = 1.0
 
 
 # ok, finally - let's convert these data into the correct units - TFPI & PAI1 is already in nM, the rest 
@@ -69,9 +69,9 @@ for i ∈ 1:number_of_synthetic_samples
         
         # look up the scale factor -
         fld_symbol = data_col_symbols[j]
-        if(fld_symbol == :TFPI || fld_symbol == :PAI1 || fld_symbol == :Fbgn)
-            synthetic_data_frame[i,fld_symbol] = synthetic_data_frame[i,fld_symbol]
-        elseif(haskey(scale_factor_dict,fld_symbol) == true) # TFPI, Fbgn & PAI1 are already in the correct units -
+       # if(fld_symbol == :TFPI || fld_symbol == :PAI1 || fld_symbol == :Fbgn)
+       #     synthetic_data_frame[i,fld_symbol] = synthetic_data_frame[i,fld_symbol]
+        if(haskey(scale_factor_dict,fld_symbol) == true) # TFPI, Fbgn & PAI1 are already in the correct units -
             SF_val = scale_factor_dict[fld_symbol]
             old_value = synthetic_data_frame[i,fld_symbol]
             new_value = SF_val*(old_value/100)
@@ -83,5 +83,5 @@ end
 
 
 # dump sample data to disk -
-path_to_synthetic_data = joinpath(_PATH_TO_DATA, "Training-Synthetic-Thrombin-TF-Hormones-Fibrinolysis.csv")
+path_to_synthetic_data = joinpath(_PATH_TO_DATA, "Training-Synthetic-Composition.csv")
 CSV.write(path_to_synthetic_data, synthetic_data_frame)

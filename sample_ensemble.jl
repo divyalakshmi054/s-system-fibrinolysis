@@ -1,5 +1,6 @@
 # load the include -
 include("Include.jl")
+using Plots
 
 # build the model structure -
 path_to_model_file = joinpath(pwd(), "model", "Fibrinolysis.bst")
@@ -76,9 +77,10 @@ for i ∈ 1:10
     global (T,U) = evaluate_w_delay(dd,tspan=(0.0,120.0))
     data = [T U]
     
+    
     # dump -
     _PATH_TO_TMP = joinpath(pwd(),"tmp")
     path_to_sim_data = joinpath(_PATH_TO_TMP, "SIM-TF-NO-TM-SYN1K-$(i).csv")
     CSV.write(path_to_sim_data, Tables.table(data,header=vcat("Time",dd.list_of_dynamic_species)))
- 
+    savefig(plot(T,U[:,9]),"plot$(i).png")
 end

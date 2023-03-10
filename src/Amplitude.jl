@@ -7,7 +7,7 @@ function amplitude(time::Float64,fibrin::Float64,tPA::Float64,FIIa::Float64)::Fl
 
     if(time>td)
         tau = 0.0035*(1-(FIIa/1400))
-        S = 65+1.25*tPA
+        S = 21.6+1.08*tPA
         a1 = S*(1 - exp(-tau*(time-td)))
     else
        a1 = 0 
