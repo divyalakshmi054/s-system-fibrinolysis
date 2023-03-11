@@ -7,3 +7,4 @@ include("Amplitude.jl")
 using Distributions
 using Statistics
 using LinearAlgebra
+using Plots
