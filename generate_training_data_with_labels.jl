@@ -10,7 +10,7 @@ using Statistics
 using LinearAlgebra
 
 # load the actual data -
-path_to_experimental_data = joinpath(_PATH_TO_DATA, "Training-Thrombin-TF-Hormones-Fibrinolysis.csv")
+path_to_experimental_data = joinpath(_PATH_TO_DATA, "Training-Composition.csv")
 full_df = CSV.read(path_to_experimental_data, DataFrame)
 (number_of_records, _) = size(full_df) 
 
@@ -31,15 +31,16 @@ scale_factor_dict[:XI] = (1e-8)*SF*(1/100)
 scale_factor_dict[:XII] = (1e-8)*SF*(1/100)
 scale_factor_dict[:AT] = (3.4e-6)*SF*(1/100)
 scale_factor_dict[:PC] = (6.3e-8)*SF*(1/100)
-scale_factor_dict[:TFPI] = 1.0
-scale_factor_dict[:Lagtime] = 1.0
-scale_factor_dict[:Peak] = 1.0
-scale_factor_dict[Symbol("T.Peak")] = 1.0
-scale_factor_dict[:Max] = 1.0
-scale_factor_dict[:AUC] = 1.0
-scale_factor_dict[:subjid] = 1
-scale_factor_dict[:visitid] = 1
-
+scale_factor_dict[:TFPI] = (2.9e-11)*SF
+scale_factor_dict[:Fbgn] = (2.9e-8)*SF  #calculated using molecular mass of compound
+scale_factor_dict[:Plgn] = (1.09e-8)*SF #calculated using molecular mass of compound
+scale_factor_dict[:TAFI] = 75.0*(1/100)
+scale_factor_dict[:a2AP] = (1.53e-8)*SF #calculated using molecular mass of compound - let's revisit this later
+scale_factor_dict[:RBC] = 1.0 #let's leave these alone for now
+scale_factor_dict[:PLT] = 1.0 #let's leave these alone for now
+scale_factor_dict[:FXIII] = 68.0*(1/100)
+scale_factor_dict[:ID] = 1
+scale_factor_dict[:Visit] = 1
 
 # initialize -
 transformed_df = DataFrame()
@@ -55,8 +56,8 @@ for rᵢ ∈ 1:number_of_records
 
     # create new record -
     transformed_tuple = (
-        subjid = tmp[1], 
-        visitid = tmp[2],
+        ID = tmp[1], 
+        Visit = tmp[2],
         II = tmp[3],
         V = tmp[4],
         VII = tmp[5],
@@ -68,15 +69,17 @@ for rᵢ ∈ 1:number_of_records
         AT = tmp[11],
         PC = tmp[12],
         TFPI = tmp[13],
-        Lagtime = tmp[14],
-        Peak = tmp[15],
-        TPeak = tmp[16],
-        Max = tmp[17],
-        AUC = tmp[18]
+        Fbgn = tmp[14],
+        Plgn = tmp[15],
+        a2AP = tmp[16],
+        TAFI = tmp[17],
+        FXIII = tmp[18],
+        RBC = tmp[19],
+        PLT = tmp[20]
     )
     push!(transformed_df, transformed_tuple)
 end
 
 # dump sample data to disk -
-path_to_transformed_data = joinpath(_PATH_TO_DATA, "Training-Thrombin-TF-Transformed-w-Labels.csv")
+path_to_transformed_data = joinpath(_PATH_TO_DATA, "Training-Composition-Transformed-w-Labels.csv")
 CSV.write(path_to_transformed_data, transformed_df)

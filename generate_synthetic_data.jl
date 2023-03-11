@@ -19,7 +19,7 @@ data_col_names_tuple = Tuple(Symbol.(names(full_df)[3:end]))
 number_of_fields = length(data_col_symbols)
 
 # what visit are we looking at?
-visit_df = filter(:Visit => x->(x==4), full_df) #let's filter visit 4s since we look to train using that visit
+#visit_df = filter(:Visit => x->(x==4), full_df) #let's filter visit 4s since we look to train using that visit
 
 # sample -
 number_of_synthetic_samples = 1000
