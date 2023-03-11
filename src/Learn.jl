@@ -7,33 +7,39 @@ function learn_optim(index::Int, model::Dict{String,Any}, training_df::DataFrame
     SF = 1e9
 
     # setup static -
-    sfa = model["static_factors_array"]
-    sfa[1] = training_df[index,:TFPI]       # 1 TFPI
-    sfa[2] = training_df[index,:AT]         # 2 AT
-    sfa[3] = (5e-12) * SF               # 3 TF
-    sfa[6] = 0.005                      # 6 TRAUMA
-
+    sfa = model.static_factors_array
+    sfa[1] = 8.0                    # 1 tPA
+    sfa[2] = 0.5                    # 2 PAI1; calculated from literature
+    sfa[3] = training_df[i,:TAFI]   # 3 TAFI
+    sfa[4] = training_df[i,:AT]     # 4 AT   
+     
+    # setup dynamic -
     # grab the multiplier from the data -
-    ℳ = model["number_of_dynamic_states"]
+    ℳ = dd.number_of_dynamic_states
     xₒ = zeros(ℳ)
-    xₒ[1] = training_df[index, :II]         # 1 FII 
-    xₒ[2] = training_df[index, :VII]        # 2 FVII 
-    xₒ[3] = training_df[index, :V]          # 3 FV
-    xₒ[4] = training_df[index, :X]          # 4 FX
-    xₒ[5] = training_df[index, :VIII]       # 5 FVIII
-    xₒ[6] = training_df[index, :IX]         # 6 FIX
-    xₒ[7] = training_df[index, :XI]         # 7 FXI
-    xₒ[8] = training_df[index, :XII]        # 8 FXII 
-    xₒ[9] = (1e-14)*SF                      # 9 FIIa
-    model["initial_condition_vector"] = xₒ
+    xₒ[1] = training_df[i, :II]      # 1 FII
+    xₒ[2] = training_df[i, :Fbgn]    # 2 FI / Fbgn
+    xₒ[3] = (1e-14)*SF               # 3 FIIa
+    xₒ[6] = training_df[i, :Plgn]    # 4 Plgn
+    xₒ[9] = 0.125                    # 9 CF
+    model.initial_condition_array = xₒ
+ 
+    # let's load up our clot parameters sheet -
+    _PATH_TO_DATA = joinpath(pwd(),"data")
+    parameters_df = CSV.read(joinpath(_PATH_TO_DATA,"Training-Clot-Parameters.csv"),DataFrame)
+
+    (R,C) = size(training_df)
+
+    # we want to train using visit 4 and with TPA, so let's filter using that? -
+    isit_df = filter(:Visit => x->(x=="V4") , full_df)
 
     # what is the output array?
     Y = Array{Float64,1}(undef,5)
-    Y[1] = training_df[index, :Lagtime]
-    Y[2] = training_df[index, :Peak]
-    Y[3] = training_df[index, Symbol("TPeak")]
-    Y[4] = training_df[index, :Max]
-    Y[5] = training_df[index, :AUC]
+    Y[1] = parameters_df[index, :CT]
+    Y[2] = parameters_df[index, :CFT]
+    Y[3] = parameters_df[index, MCF]
+    Y[4] = parameters_df[index, :alpha]
+    Y[5] = parameters_df[index, :A30]
 
     # setup initial parameter values and bounds array -
     κ = [
