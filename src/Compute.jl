@@ -3,7 +3,7 @@
 # load the include -
 include("Include.jl")
 
-function clot_properties_sheet()
+function clot_properties()
     # load the training data -
     _PATH_TO_DATA = joinpath(pwd(),"data")
     path_to_training_data = joinpath(_PATH_TO_DATA, "Training-TEG.csv")
@@ -33,7 +33,7 @@ function clot_properties_sheet()
     end
     
     #time to dump, finally! -
-    data_output_header = ["clot time", "clot formation time", "maximum clot firmness","alpha","A30"]
+    data_output_header = ["CT", "CFT", "MCF","alpha","A30"]
     CSV.write(joinpath(_PATH_TO_DATA,"Training-Clot-Parameters.csv"),Tables.table(transpose(data_vector));header = data_output_header)
 end
 
