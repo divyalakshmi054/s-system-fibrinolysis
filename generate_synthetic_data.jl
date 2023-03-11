@@ -26,7 +26,7 @@ number_of_synthetic_samples = 1000
 data_array = Matrix(full_df[!, 3:end])
 μ = mean(data_array, dims = 1)
 Σ = cov(data_array)
-D = MvNormal(reshape(μ,18), Σ)
+D = MvNormal(reshape(μ,14), Σ)
 synthetic_sampled_data = rand(D, number_of_synthetic_samples)
 
 # create a new data frame -
@@ -54,9 +54,9 @@ scale_factor_dict[:XI] = (1e-8)*SF
 scale_factor_dict[:XII] = (1e-8)*SF
 scale_factor_dict[:AT] = (3.4e-6)*SF
 scale_factor_dict[:PC] = (6.3e-8)*SF
-scale_factor_dict[:TFPI] = 0.029*SF
-scale_factor_dict[:Fbgn] = (8.8e-6)*SF
-scale_factor_dict[:Plgn] = (2e-6)*SF
+scale_factor_dict[:TFPI] = (2.9e-11)*SF
+scale_factor_dict[:Fbgn] = (2.9e-8)*SF
+scale_factor_dict[:Plgn] = (1.09e-8)*SF
 scale_factor_dict[:TAFI] = 75.0 #re-check
 #scale_factor_dict[:PAI1] = 1.0
 
@@ -69,9 +69,10 @@ for i ∈ 1:number_of_synthetic_samples
         
         # look up the scale factor -
         fld_symbol = data_col_symbols[j]
-       # if(fld_symbol == :TFPI || fld_symbol == :PAI1 || fld_symbol == :Fbgn)
-       #     synthetic_data_frame[i,fld_symbol] = synthetic_data_frame[i,fld_symbol]
-        if(haskey(scale_factor_dict,fld_symbol) == true) # TFPI, Fbgn & PAI1 are already in the correct units -
+        if(fld_symbol == :TFPI || fld_symbol == :Plgn || fld_symbol == :Fbgn)
+            SF_val = scale_factor_dict[fld_symbol]
+            synthetic_data_frame[i,fld_symbol] = SF_val*synthetic_data_frame[i,fld_symbol]
+        elseif(haskey(scale_factor_dict,fld_symbol) == true)
             SF_val = scale_factor_dict[fld_symbol]
             old_value = synthetic_data_frame[i,fld_symbol]
             new_value = SF_val*(old_value/100)
