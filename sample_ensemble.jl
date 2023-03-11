@@ -85,7 +85,7 @@ for i ∈ 1:10
     _PATH_TO_TMP = joinpath(pwd(),"tmp")
     path_to_sim_data = joinpath(_PATH_TO_TMP, "SIM-TF-NO-TM-SYN1K-$(i).csv")
     CSV.write(path_to_sim_data, Tables.table(data,header=vcat("Time",dd.list_of_dynamic_species)))
-    #_PATH_TO_FIGS = joinpath(pwd(),"figs")
-    #path_to_figs = joinpath(_PATH_TO_FIGS, "plot$(i).pdf")
-    #Plots.savefig(Plots.plot(T,U[:,9]), path_to_figs)
+    _PATH_TO_FIGS = joinpath(pwd(),"figs")
+    path_to_figs = joinpath(_PATH_TO_FIGS, "plot$(i).pdf")
+    Plots.savefig(Plots.plot(T,U[:,9]), path_to_figs)
 end

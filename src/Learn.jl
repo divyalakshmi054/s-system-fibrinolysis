@@ -28,10 +28,9 @@ function learn_optim(index::Int, model::Dict{String,Any}, training_df::DataFrame
     _PATH_TO_DATA = joinpath(pwd(),"data")
     parameters_df = CSV.read(joinpath(_PATH_TO_DATA,"Training-Clot-Parameters.csv"),DataFrame)
 
+    # dimensions -
     (R,C) = size(training_df)
 
-    # we want to train using visit 4 and with TPA, so let's filter using that? -
-    isit_df = filter(:Visit => x->(x=="V4") , full_df)
 
     # what is the output array?
     Y = Array{Float64,1}(undef,5)
@@ -40,6 +39,9 @@ function learn_optim(index::Int, model::Dict{String,Any}, training_df::DataFrame
     Y[3] = parameters_df[index, MCF]
     Y[4] = parameters_df[index, :alpha]
     Y[5] = parameters_df[index, :A30]
+
+# ==== CHANGES ARE ABOVE, STILL WORKING ON THIS FILE ====
+# ==== BELOW FROM JV'S COAGULATION CODE, HAVE NOT CHANGED FOR FIBRINOLYTIC MODEL =====
 
     # setup initial parameter values and bounds array -
     κ = [
