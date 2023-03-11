@@ -2,9 +2,16 @@
 using BSTModelKit
 using CSV
 using DataFrames
-using DifferentialEquations
-include("Amplitude.jl")
-using Distributions
-using Statistics
 using LinearAlgebra
 using Plots
+using Distributions
+using DifferentialEquations
+using GlobalSensitivity
+using Tables
+using NumericalIntegration
+using Optim
+using Colors
+using JLD2
+
+# my files -
+include("Amplitude.jl")
