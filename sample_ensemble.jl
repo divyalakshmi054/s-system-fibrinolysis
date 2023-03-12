@@ -45,9 +45,9 @@ for i ∈ 1:10
     α = dd.α
     α[1] = 0.7
     α[2] = 0.7
-    α[3] = 0.06
-    α[4] = 0.06
-    α[5] = 0.02
+    α[3] = 0.7
+   # α[4] = 0.05
+    α[5] = 0.025
 
     #update G -
     G = dd.G
@@ -62,22 +62,14 @@ for i ∈ 1:10
 
     # what is the index of TAFI?
     idx = findfirst(x->x=="TAFI",dd.total_species_list)
-    G[idx,5] = -0.1    
-    
-    #PAI1 -
-    idx = findfirst(x->x=="PAI1",dd.total_species_list)
-    G[idx,4] = -0.1
+    G[idx,5] = 0.1
 
-    #tPA -
-    idx = findfirst(x->x=="tPA",dd.total_species_list)
-    G[idx,4] = 0.045
-
-    #Plasmin -
-    idx = findfirst(x->x=="Plasmin",dd.total_species_list)
-    G[idx,5] = 0.02
+    # what is the index of fibrin?
+    idx = findfirst(x->x=="FIa",dd.total_species_list)
+    G[idx,5] = 0.075
 
     # run the model -
-    global (T,U) = evaluate_w_delay(dd,tspan=(0.0,120.0))
+    global (T,U) = evaluate_w_delay(dd,tspan=(0.0,180.0))
     data = [T U]
     
     
@@ -86,6 +78,6 @@ for i ∈ 1:10
     path_to_sim_data = joinpath(_PATH_TO_TMP, "SIM-TF-NO-TM-SYN1K-$(i).csv")
     CSV.write(path_to_sim_data, Tables.table(data,header=vcat("Time",dd.list_of_dynamic_species)))
     _PATH_TO_FIGS = joinpath(pwd(),"figs")
-    path_to_figs = joinpath(_PATH_TO_FIGS, "plot$(i).pdf")
+    path_to_figs = joinpath(_PATH_TO_FIGS, "plot$(i).png")
     Plots.savefig(Plots.plot(T,U[:,9]), path_to_figs)
 end
