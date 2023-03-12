@@ -1,6 +1,6 @@
 # it's training time -
 
-function learn_optim(index::Int, model::Dict{String,Any}, training_df::DataFrame; 
+function learn_optim(index::Int, model::BSTModel, training_df::DataFrame; 
     pₒ::Union{Nothing,Array{Float64,1}} = nothing)
 
     # main simulation loop -
@@ -10,17 +10,17 @@ function learn_optim(index::Int, model::Dict{String,Any}, training_df::DataFrame
     sfa = model.static_factors_array
     sfa[1] = 8.0                    # 1 tPA
     sfa[2] = 0.5                    # 2 PAI1; calculated from literature
-    sfa[3] = training_df[i,:TAFI]   # 3 TAFI
-    sfa[4] = training_df[i,:AT]     # 4 AT   
+    sfa[3] = training_df[index,:TAFI]   # 3 TAFI
+    sfa[4] = training_df[index,:AT]     # 4 AT   
      
     # setup dynamic -
     # grab the multiplier from the data -
-    ℳ = dd.number_of_dynamic_states
+    ℳ = model.number_of_dynamic_states
     xₒ = zeros(ℳ)
-    xₒ[1] = training_df[i, :II]      # 1 FII
-    xₒ[2] = training_df[i, :Fbgn]    # 2 FI / Fbgn
+    xₒ[1] = training_df[index, :II]      # 1 FII
+    xₒ[2] = training_df[index, :Fbgn]    # 2 FI / Fbgn
     xₒ[3] = (1e-14)*SF               # 3 FIIa
-    xₒ[6] = training_df[i, :Plgn]    # 4 Plgn
+    xₒ[6] = training_df[index, :Plgn]    # 4 Plgn
     xₒ[9] = 0.125                    # 9 CF
     model.initial_condition_array = xₒ
  
@@ -36,7 +36,7 @@ function learn_optim(index::Int, model::Dict{String,Any}, training_df::DataFrame
     Y = Array{Float64,1}(undef,5)
     Y[1] = parameters_df[index, :CT]
     Y[2] = parameters_df[index, :CFT]
-    Y[3] = parameters_df[index, MCF]
+    Y[3] = parameters_df[index, :MCF]
     Y[4] = parameters_df[index, :alpha]
     Y[5] = parameters_df[index, :A30]
 
