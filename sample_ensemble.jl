@@ -25,7 +25,7 @@ for i ∈ 1:10
 
     # setup static -
     sfa = dd.static_factors_array
-    sfa[1] = 0.074                  # 1 tPA; bg = 0.074 nM
+    sfa[1] = 8.0                  # 1 tPA; bg = 0.074 nM
     sfa[2] = 0.5                    # 2 PAI1; calculated from literature
     sfa[3] = training_df[i,:TAFI]   # 3 TAFI
     sfa[4] = training_df[i,:AT]     # 4 AT   
@@ -62,11 +62,11 @@ for i ∈ 1:10
 
     # what is the index of TAFI?
     idx = findfirst(x->x=="TAFI",dd.total_species_list)
-    G[idx,5] = 0.1
+    G[idx,5] = 0.01
 
     # what is the index of fibrin?
     idx = findfirst(x->x=="FIa",dd.total_species_list)
-    G[idx,5] = 0.075
+    G[idx,5] = 0.05
 
     # run the model -
     global (T,U) = evaluate_w_delay(dd,tspan=(0.0,180.0))
