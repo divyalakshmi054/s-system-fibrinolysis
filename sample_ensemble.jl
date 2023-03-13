@@ -25,7 +25,7 @@ for i ∈ 1:10
 
     # setup static -
     sfa = dd.static_factors_array
-    sfa[1] = 0.0                    # 1 tPA; bg = 0.074 nM
+    sfa[1] = 0.0                   # 1 tPA; bg = 0.074 nM
     sfa[2] = 0.5                    # 2 PAI1; calculated from literature
     sfa[3] = training_df[i,:TAFI]   # 3 TAFI
     sfa[4] = training_df[i,:AT]     # 4 AT   
@@ -35,8 +35,7 @@ for i ∈ 1:10
     ℳ = dd.number_of_dynamic_states
     xₒ = zeros(ℳ)
     xₒ[1] = training_df[i, :II]      # 1 FII
-    #xₒ[2] = training_df[i, :Fbgn]    # 2 FI / Fbgn
-    xₒ[2] = 10000.0                    
+    xₒ[2] = training_df[i, :Fbgn]    # 2 FI / Fbgn
     xₒ[3] = (1e-14)*SF               # 3 FIIa
     xₒ[6] = training_df[i, :Plgn]    # 4 Plgn
     dd.initial_condition_array = xₒ
@@ -45,7 +44,7 @@ for i ∈ 1:10
     α = dd.α
     α[1] = 0.7
     α[2] = 0.7
-    α[3] = 0.07
+    α[3] = 0.7
     #α[4] = 0.05
     #α[5] = 0.025
 
@@ -58,11 +57,11 @@ for i ∈ 1:10
 
     # what is the index of FIIa?
     idx = findfirst(x->x=="FIIa",dd.total_species_list)
-    G[idx, 3] = 0.25
+    G[idx, 3] = 3
 
     # what is the index of FI?
-    #idx = findfirst(x->x=="FI",dd.total_species_list)
-   # G[idx, 3] = 0.25
+    idx = findfirst(x->x=="FI",dd.total_species_list)
+    G[idx, 3] = 0.5
 
     # what is the index of TAFI?
    # idx = findfirst(x->x=="TAFI",dd.total_species_list)
@@ -83,6 +82,11 @@ for i ∈ 1:10
     path_to_sim_data = joinpath(_PATH_TO_TMP, "SIM-TF-NO-TM-SYN1K-$(i).csv")
     CSV.write(path_to_sim_data, Tables.table(hcat(data,CF),header=vcat("Time",dd.list_of_dynamic_species,"CF")))
     _PATH_TO_FIGS = joinpath(pwd(),"figs")
-    path_to_figs = joinpath(_PATH_TO_FIGS, "plot$(i).png")
-    Plots.savefig(Plots.plot(T,CF), path_to_figs)
+    path_to_CFfigs = joinpath(_PATH_TO_FIGS, "CFplot$(i).png")
+    Plots.savefig(Plots.plot(T,CF), path_to_CFfigs)
+    path_to_thrombin_figs = joinpath(_PATH_TO_FIGS, "thrombinplot$(i).png")
+    Plots.savefig(Plots.plot(T,U[:,3]), path_to_thrombin_figs)
+    path_to_fibrin_figs = joinpath(_PATH_TO_FIGS, "fibrinplot$(i).png")
+    Plots.savefig(Plots.plot(T,U[:,4]), path_to_fibrin_figs)
+    
 end
