@@ -30,14 +30,9 @@ function _balances_delay_term(dx, x, p, t)
     tmp = S*rV + u(t,x,p)
 
     # populate the dx vector with the tmp vector -
-    for i ∈ 1:number_of_dynamic_states
+    for i ∈ (1:number_of_dynamic_states)
         dx[i] = tmp[i]
-    end
-
-    fibrin = x[4]   # FIa is the 4th dynamic species
-    fIIa = x[3]     # FIIa is the 3rd dynamic species
-    tPA = static_factors_array[3] # tPA is the 3rd static factor
-    x[9] = amplitude(t,fibrin,tPA,fIIa)     
+    end    
 end
 
 

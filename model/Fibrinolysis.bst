@@ -6,7 +6,7 @@
 #static::end
 
 #dynamic::start
-    FII,FI,FIIa,FIa,FDP,Plgn,Plasmin,FIIa_inactive,CF
+    FII,FI,FIIa,FIa,FDP,Plgn,Plasmin,FIIa_inactive
 #dynamic::end
 
 #structure::start
@@ -16,11 +16,11 @@
     // 3. {products}: list of dynamic species acting as product
     
     // reactions in the pathway -
-    r1::FII --> FIIa
-    r2::FIIa --> FIIa_inactive
-    r3::FI --> FIa
-    r4::Plgn --> Plasmin
-    r5::FIa --> FDP
+    r1::{FII} --> {FIIa}
+    r2::{FIIa} --> {FIIa_inactive}
+    r3::{FI} --> {FIa}
+    r4::{Plgn} --> {Plasmin}
+    r5::{FIa} --> {FDP}
 #structure::end
 
 #rate::start
