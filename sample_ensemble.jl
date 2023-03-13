@@ -45,7 +45,7 @@ for i ∈ 1:10
     α = dd.α
     α[1] = 0.7
     α[2] = 0.7
-    α[3] = 2
+    α[3] = 0.07
     #α[4] = 0.05
     #α[5] = 0.025
 
@@ -57,12 +57,12 @@ for i ∈ 1:10
     G[idx, 2] = 0.15
 
     # what is the index of FIIa?
-   # idx = findfirst(x->x=="FIIa",dd.total_species_list)
-   # G[idx, 3] = .25
+    idx = findfirst(x->x=="FIIa",dd.total_species_list)
+    G[idx, 3] = 0.25
 
     # what is the index of FI?
-    idx = findfirst(x->x=="FI",dd.total_species_list)
-    G[idx, 3] = 0.25
+    #idx = findfirst(x->x=="FI",dd.total_species_list)
+   # G[idx, 3] = 0.25
 
     # what is the index of TAFI?
    # idx = findfirst(x->x=="TAFI",dd.total_species_list)
@@ -82,7 +82,7 @@ for i ∈ 1:10
     _PATH_TO_TMP = joinpath(pwd(),"tmp")
     path_to_sim_data = joinpath(_PATH_TO_TMP, "SIM-TF-NO-TM-SYN1K-$(i).csv")
     CSV.write(path_to_sim_data, Tables.table(hcat(data,CF),header=vcat("Time",dd.list_of_dynamic_species,"CF")))
-    #_PATH_TO_FIGS = joinpath(pwd(),"figs")
-    #path_to_figs = joinpath(_PATH_TO_FIGS, "plot$(i).png")
-    #Plots.savefig(Plots.plot(T,U[:,9]), path_to_figs)
+    _PATH_TO_FIGS = joinpath(pwd(),"figs")
+    path_to_figs = joinpath(_PATH_TO_FIGS, "plot$(i).png")
+    Plots.savefig(Plots.plot(T,CF), path_to_figs)
 end
