@@ -25,7 +25,7 @@ for i ∈ 1:10
 
     # setup static -
     sfa = dd.static_factors_array
-    sfa[1] = 0.0                    # 1 tPA
+    sfa[1] = 4.0                    # 1 tPA
     sfa[2] = 0.5                    # 2 PAI1; calculated from literature
     sfa[3] = training_df[i,:TAFI]   # 3 TAFI
     sfa[4] = training_df[i,:AT]     # 4 AT   
@@ -43,8 +43,8 @@ for i ∈ 1:10
     #update α -
     α = dd.α
     α[2] = 0.7
-    #α[4] = 0.05
-    #α[5] = 0.025
+    α[4] = 0.025
+    α[5] = 0.01
 
     #update G -
     G = dd.G
@@ -54,20 +54,24 @@ for i ∈ 1:10
     G[idx, 2] = 0.15
 
     # what is the index of FIIa?
-    #idx = findfirst(x->x=="FIIa",dd.total_species_list)
-    #G[idx, 3] = 0.025
+    idx = findfirst(x->x=="FIIa",dd.total_species_list)
+    G[idx, 3] = 0.75
 
     # what is the index of FI?
     idx = findfirst(x->x=="FI",dd.total_species_list)
-    G[idx, 3] = 0.5
+    G[idx, 3] = 0.75
+
+    # what is the index of tPA?
+    #idx = findfirst(x->x=="tPA",dd.total_species_list)
+    #G[idx,4] = 0.025
 
     # what is the index of TAFI?
-   # idx = findfirst(x->x=="TAFI",dd.total_species_list)
-   # G[idx,5] = 0.01
+    idx = findfirst(x->x=="TAFI",dd.total_species_list)
+    G[idx,5] = 0.1
 
-    # what is the index of fibrin?
-   # idx = findfirst(x->x=="FIa",dd.total_species_list)
-   # G[idx,5] = 0.05
+    # what is the index of FIa?
+    idx = findfirst(x->x=="FIa",dd.total_species_list)
+    G[idx,5] = 0.2
 
     # run the model -
     global (T,U) = evaluate_w_delay(dd,tspan=(0.0,180.0))
@@ -81,12 +85,12 @@ for i ∈ 1:10
     CSV.write(path_to_sim_data, Tables.table(hcat(data,CF),header=vcat("Time",dd.list_of_dynamic_species,"CF")))
 
     # figures -
-    _PATH_TO_FIGS = joinpath(pwd(),"figs")
-    path_to_CFfigs = joinpath(_PATH_TO_FIGS, "CFplot$(i).png")
-    Plots.savefig(Plots.plot(T,CF), path_to_CFfigs)
-    path_to_thrombin_figs = joinpath(_PATH_TO_FIGS, "thrombinplot$(i).png")
-    Plots.savefig(Plots.plot(T,U[:,3]), path_to_thrombin_figs)
-    path_to_fibrin_figs = joinpath(_PATH_TO_FIGS, "fibrinplot$(i).png")
-    Plots.savefig(Plots.plot(T,U[:,4]), path_to_fibrin_figs)
+    #_PATH_TO_FIGS = joinpath(pwd(),"figs")
+    #path_to_CFfigs = joinpath(_PATH_TO_FIGS, "CFplot$(i).png")
+    #Plots.savefig(Plots.plot(T,CF), path_to_CFfigs)
+    #path_to_thrombin_figs = joinpath(_PATH_TO_FIGS, "thrombinplot$(i).png")
+    #Plots.savefig(Plots.plot(T,U[:,3]), path_to_thrombin_figs)
+    #path_to_fibrin_figs = joinpath(_PATH_TO_FIGS, "fibrinplot$(i).png")
+    #Plots.savefig(Plots.plot(T,U[:,4]), path_to_fibrin_figs)
     
 end
