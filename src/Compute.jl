@@ -25,15 +25,16 @@ function clot_properties()
     end
 
     T = training_df[:,1]                            # define time
-    data_vector = Array{Float64}(undef,(5,(C-1)))   # 5 properties, C-1 patients
+    data_vector = Array{Float64}(undef,(6,(C-1)))   # 5 properties, C-1 patients
 
     for i ∈ 1:(C-1)                                 #omitting column 1: time
         X = training_df[1:end,i+1]
         data_vector[:,i] = model_output_vector(T,X)
+        print(data_vector[:,i],"\n")
     end
-    
+    print(size(data_vector))
     #time to dump, finally! -
-    data_output_header = ["CT", "CFT", "MCF","alpha","A30"]
+    data_output_header = ["CT", "CFT", "MCF","MCF-t", "alpha","A30"]
     CSV.write(joinpath(_PATH_TO_DATA,"Training-Clot-Parameters.csv"),Tables.table(transpose(data_vector));header = data_output_header)
 end
 
@@ -44,13 +45,15 @@ function model_output_vector(T::Array{Float64,1},X::Array{Float64,1})::Array{Flo
     CT = clot_time(x->x>=2.0, T, X)
     CFT = clot_formation_time(x->x>=20.0, T, X) - CT
     MCF = maximum(X)
-    alpha_slope = 90-(compute_alpha_slope(CFT, CT, T, X)*180/pi)
+    MCF_t = MCF_time(MCF,T,X)
+    alpha_slope = compute_alpha_slope(CFT, CT, T, X)*180/pi
     a_30 = compute_amp_30(CT,T,X)
 
     #it's go time -
     push!(output_vector,CT)
     push!(output_vector,CFT)
     push!(output_vector,MCF)
+    push!(output_vector,MCF_t)
     push!(output_vector,alpha_slope)
     push!(output_vector,a_30)
     return output_vector
@@ -83,9 +86,12 @@ function clot_formation_time(rule::Function, T::Array{Float64,1}, X::Array{Float
 end
 
 function compute_alpha_slope(CFT::Float64, CT::Float64, T::Array{Float64,1}, X::Array{Float64,1})::Float64
+    if(CT==1000.0)
+        return 1000.0
+    end
     idx_CFT = findfirst(x->x==CFT+CT, T)
     idx_CT = findfirst(x->x==CT, T)
-    slope = (X[idx_CFT] - X[idx_CT])/(CFT) #not confident about this because of units
+    slope = (X[idx_CFT] - X[idx_CT])/(CFT)
     alpha_angle = atan(slope)
     return alpha_angle
 end
@@ -93,7 +99,7 @@ end
 function compute_amp_30(CT::Float64, T::Array{Float64,1}, X::Array{Float64,1})::Float64
 
     # filter -
-    idx = findfirst(x->x==CT+1800,T)
+    idx = findfirst(x->x>=(CT+30),T)
 
     if (isnothing(idx) == true)
         return 1000.0
@@ -101,4 +107,17 @@ function compute_amp_30(CT::Float64, T::Array{Float64,1}, X::Array{Float64,1})::
 
     # return -
     return X[idx]
+end
+
+function MCF_time(MCF::Float64, T::Array{Float64,1}, X::Array{Float64,1})::Float64
+
+    # filter -
+    idx = findfirst(x->x==MCF,X)
+
+    if (isnothing(idx) == true)
+        return 1000.0
+    end
+
+    # return -
+    return T[idx]
 end

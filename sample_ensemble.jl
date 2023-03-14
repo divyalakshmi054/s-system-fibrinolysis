@@ -81,12 +81,12 @@ for i ∈ 1:10
     CSV.write(path_to_sim_data, Tables.table(hcat(data,CF),header=vcat("Time",dd.list_of_dynamic_species,"CF")))
 
     # figures -
-    #_PATH_TO_FIGS = joinpath(pwd(),"figs")
-    #path_to_CFfigs = joinpath(_PATH_TO_FIGS, "CFplot$(i).png")
-    #Plots.savefig(Plots.plot(T,CF), path_to_CFfigs)
-    #path_to_thrombin_figs = joinpath(_PATH_TO_FIGS, "thrombinplot$(i).png")
-    #Plots.savefig(Plots.plot(T,U[:,3]), path_to_thrombin_figs)
-    #path_to_fibrin_figs = joinpath(_PATH_TO_FIGS, "fibrinplot$(i).png")
-    #Plots.savefig(Plots.plot(T,U[:,4]), path_to_fibrin_figs)
+    _PATH_TO_FIGS = joinpath(pwd(),"figs")
+    path_to_CFfigs = joinpath(_PATH_TO_FIGS, "CFplot$(i).png")
+    Plots.savefig(Plots.plot(T,CF), path_to_CFfigs)
+    path_to_thrombin_figs = joinpath(_PATH_TO_FIGS, "thrombinplot$(i).png")
+    Plots.savefig(Plots.plot(T,U[:,3]), path_to_thrombin_figs)
+    path_to_fibrin_figs = joinpath(_PATH_TO_FIGS, "fibrinplot$(i).png")
+    Plots.savefig(Plots.plot(T,U[:,4]), path_to_fibrin_figs)
     
 end
