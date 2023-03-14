@@ -34,7 +34,7 @@ function clot_properties()
     end
     print(size(data_vector))
     #time to dump, finally! -
-    data_output_header = ["CT", "CFT", "MCF","MCF-t", "alpha","A30"]
+    data_output_header = ["CT", "CFT", "MCF","MCFt", "alpha","A30"]
     CSV.write(joinpath(_PATH_TO_DATA,"Training-Clot-Parameters.csv"),Tables.table(transpose(data_vector));header = data_output_header)
 end
 

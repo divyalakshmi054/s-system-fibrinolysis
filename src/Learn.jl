@@ -32,12 +32,13 @@ function learn_optim(index::Int, model::BSTModel, training_df::DataFrame;
 
 
     # what is the output array?
-    Y = Array{Float64,1}(undef,5)
+    Y = Array{Float64,1}(undef,6)
     Y[1] = parameters_df[index, :CT]
     Y[2] = parameters_df[index, :CFT]
     Y[3] = parameters_df[index, :MCF]
-    Y[4] = parameters_df[index, :alpha]
-    Y[5] = parameters_df[index, :A30]
+    Y[4] = parameters_df[index, :MCFt]
+    Y[5] = parameters_df[index,:alpha]
+    Y[6] = parameters_df[index, :A30]
 
     # setup initial parameter values and bounds array -
     κ = [
