@@ -39,25 +39,20 @@ function learn_optim(index::Int, model::BSTModel, training_df::DataFrame;
     Y[4] = parameters_df[index, :alpha]
     Y[5] = parameters_df[index, :A30]
 
-# ==== CHANGES ARE ABOVE, STILL WORKING ON THIS FILE ====
-# ==== BELOW FROM JV'S COAGULATION CODE, HAVE NOT CHANGED FOR FIBRINOLYTIC MODEL =====
-
     # setup initial parameter values and bounds array -
     κ = [
             
             # default: hand fit set -
-            0.061   0.01 10.0   ; # 1
-            1.0     0.01 10.0   ; # 2
-            1.0     0.01 10.0   ; # 3
-            1.0     0.01 10.0   ; # 4
-            1.0     0.01 10.0   ; # 5
-            1.0     0.01 10.0   ; # 6
-            1.0     0.01 10.0   ; # 7
-            1.0     0.01 10.0   ; # 8
-            0.70    0.01 10.0   ; # 9
-            0.11    0.01 10.0   ; # 10
-            0.045   0.01 10.0   ; # 11
-            0.065   0.01 10.0   ; # 12
+            1.0         0.01 10.0       ; # 1
+            0.7         0.01 10.0       ; # 2
+            1.0         0.01 10.0       ; # 3
+            0.025       0.01 10.0       ; # 4
+            0.01        0.01 10.0       ; # 5
+            0.15        0.01 10.0       ; # 6
+            0.75        0.01 10.0       ; # 7
+            0.75        0.01 10.0       ; # 8
+            0.1         0.01 10.0       ; # 9
+            0.2         0.01 10.0       ; # 10
         ];
 
     # set default set as the start -
@@ -78,19 +73,25 @@ function learn_optim(index::Int, model::BSTModel, training_df::DataFrame;
     
     # run the sim w/the best parameters -
     # 1 - 9 : α vector
-    model["α"] = p_best[1:9]
-    G = model["G"]
-    idx = indexin(model, "FVIIa")   # 10
-    G[idx, 4] = p_best[10]
-    idx = indexin(model, "AT")      # 11
-    G[idx, 9] = p_best[11]
-    idx = indexin(model, "TFPI")    # 12
-    G[idx, 1] = -1*p_best[12]
+    model.α = p_best[1:5]
+    G = model.G
+    idx = findfirst(x->x=="AT", model.total_species_list)   # 10
+    G[idx, 2] = p_best[6]
+    idx = findfirst(x->x=="FIIa", model.total_species_list)      # 11
+    G[idx, 3] = p_best[7]
+    idx = findfirst(x->x=="FI", model.total_species_list)    # 12
+    G[idx, 3] = p_best[8]
+    idx = findfirst(x->x=="TAFI",model.total_species_list)
+    G[idx,5] = p_best[9]
+    idx = findfirst(x->x=="FIa",model.total_species_list)
+    G[idx,5] = p_best[10]
 
     # run the model -
     (T,U) = evaluate(model)
-    Xₘ = hcat(U...)
-    Yₘ = model_output_vector(T, Xₘ[9,:]) # properties of the Thrombin curve 
+    CF = Array{Float64,1}
+    CF = amplitude(T,U[:,4],sfa[1],U[:,3],xₒ[1])
+    Xₘ = hcat(CF)
+    Yₘ = model_output_vector(T, CF) # properties of the Thrombin curve 
     
     return (p_best, T, Xₘ, Yₘ, Y)
 end

@@ -25,7 +25,7 @@ for i ∈ 1:10
 
     # setup static -
     sfa = dd.static_factors_array
-    sfa[1] = 4.0                    # 1 tPA
+    sfa[1] = 0.0                    # 1 tPA
     sfa[2] = 0.5                    # 2 PAI1; calculated from literature
     sfa[3] = training_df[i,:TAFI]   # 3 TAFI
     sfa[4] = training_df[i,:AT]     # 4 AT   
@@ -60,10 +60,6 @@ for i ∈ 1:10
     # what is the index of FI?
     idx = findfirst(x->x=="FI",dd.total_species_list)
     G[idx, 3] = 0.75
-
-    # what is the index of tPA?
-    #idx = findfirst(x->x=="tPA",dd.total_species_list)
-    #G[idx,4] = 0.025
 
     # what is the index of TAFI?
     idx = findfirst(x->x=="TAFI",dd.total_species_list)
