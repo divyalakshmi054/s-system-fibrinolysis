@@ -46,7 +46,7 @@ for i ∈ 1:10
     α[2] = 0.7
     α[3] = 0.7
     #α[4] = 0.05
-    #α[5] = 0.025
+    α[5] = 0.025
 
     #update G -
     G = dd.G
@@ -56,8 +56,8 @@ for i ∈ 1:10
     G[idx, 2] = 0.15
 
     # what is the index of FIIa?
-    idx = findfirst(x->x=="FIIa",dd.total_species_list)
-    G[idx, 3] = 3
+    #idx = findfirst(x->x=="FIIa",dd.total_species_list)
+    #G[idx, 3] = 0.025
 
     # what is the index of FI?
     idx = findfirst(x->x=="FI",dd.total_species_list)
@@ -75,12 +75,14 @@ for i ∈ 1:10
     global (T,U) = evaluate_w_delay(dd,tspan=(0.0,180.0))
     data = [T U]
     CF = Array{Float64,1}
-    CF = amplitude(T,U[:,4],sfa[1],U[:,3])
+    CF = amplitude(T,U[:,4],sfa[1],U[:,3],xₒ[1])
     
     # dump -
     _PATH_TO_TMP = joinpath(pwd(),"tmp")
     path_to_sim_data = joinpath(_PATH_TO_TMP, "SIM-TF-NO-TM-SYN1K-$(i).csv")
     CSV.write(path_to_sim_data, Tables.table(hcat(data,CF),header=vcat("Time",dd.list_of_dynamic_species,"CF")))
+
+    # figures -
     _PATH_TO_FIGS = joinpath(pwd(),"figs")
     path_to_CFfigs = joinpath(_PATH_TO_FIGS, "CFplot$(i).png")
     Plots.savefig(Plots.plot(T,CF), path_to_CFfigs)

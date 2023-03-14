@@ -8,7 +8,7 @@ function learn_optim(index::Int, model::BSTModel, training_df::DataFrame;
 
     # setup static -
     sfa = model.static_factors_array
-    sfa[1] = 8.0                        # 1 tPA
+    sfa[1] = 0.0                        # 1 tPA
     sfa[2] = 0.5                        # 2 PAI1; calculated from literature
     sfa[3] = training_df[index,:TAFI]   # 3 TAFI
     sfa[4] = training_df[index,:AT]     # 4 AT   
@@ -21,7 +21,6 @@ function learn_optim(index::Int, model::BSTModel, training_df::DataFrame;
     xₒ[2] = training_df[index, :Fbgn]    # 2 FI / Fbgn
     xₒ[3] = (1e-14)*SF                   # 3 FIIa
     xₒ[6] = training_df[index, :Plgn]    # 6 Plgn
-    xₒ[9] = 0.125                        # 9 CF
     model.initial_condition_array = xₒ
  
     # let's load up our clot parameters sheet -
