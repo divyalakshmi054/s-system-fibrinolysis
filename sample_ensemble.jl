@@ -25,7 +25,7 @@ for i ∈ 1:10
 
     # setup static -
     sfa = dd.static_factors_array
-    sfa[1] = 0.0                   # 1 tPA; bg = 0.074 nM
+    sfa[1] = 0.0                    # 1 tPA
     sfa[2] = 0.5                    # 2 PAI1; calculated from literature
     sfa[3] = training_df[i,:TAFI]   # 3 TAFI
     sfa[4] = training_df[i,:AT]     # 4 AT   
@@ -42,11 +42,9 @@ for i ∈ 1:10
 
     #update α -
     α = dd.α
-    α[1] = 0.7
     α[2] = 0.7
-    α[3] = 0.7
     #α[4] = 0.05
-    α[5] = 0.025
+    #α[5] = 0.025
 
     #update G -
     G = dd.G
