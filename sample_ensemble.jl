@@ -25,10 +25,11 @@ for i ∈ 1:10
 
     # setup static -
     sfa = dd.static_factors_array
-    sfa[1] = 0.0                    # 1 tPA
+    sfa[1] = 4.0                    # 1 tPA
     sfa[2] = 0.5                    # 2 PAI1; calculated from literature
     sfa[3] = training_df[i,:TAFI]   # 3 TAFI
-    sfa[4] = training_df[i,:AT]     # 4 AT   
+    sfa[4] = training_df[i,:AT]     # 4 AT  
+    tpa_int = Int64(sfa[1])
     
     # setup dynamic -
     # grab the multiplier from the data -
@@ -42,24 +43,32 @@ for i ∈ 1:10
 
     #update α -
     α = dd.α
-    α[2] = 0.7
+    #α[1] = 10.0
+    α[2] = 0.2
+    #α[3] = 2.0
     α[4] = 0.025
     α[5] = 0.01
 
     #update G -
     G = dd.G
     
+    idx = findfirst(x->x=="FII",dd.total_species_list)
+    G[idx, 1] = 0.9
+
+    idx = findfirst(x->x=="FIIa",dd.total_species_list)
+    G[idx, 1] = 0.7
+
     # what is the index of AT?
     idx = findfirst(x->x=="AT",dd.total_species_list)
     G[idx, 2] = 0.15
 
     # what is the index of FIIa?
     idx = findfirst(x->x=="FIIa",dd.total_species_list)
-    G[idx, 3] = 0.75
+    G[idx, 3] = 1.5
 
     # what is the index of FI?
     idx = findfirst(x->x=="FI",dd.total_species_list)
-    G[idx, 3] = 0.75
+    G[idx, 3] = 1.5
 
     # what is the index of TAFI?
     idx = findfirst(x->x=="TAFI",dd.total_species_list)
@@ -82,11 +91,11 @@ for i ∈ 1:10
 
     # figures -
     _PATH_TO_FIGS = joinpath(pwd(),"figs")
-    path_to_CFfigs = joinpath(_PATH_TO_FIGS, "CFplot$(i).png")
-    Plots.savefig(Plots.plot(T,CF), path_to_CFfigs)
-    path_to_thrombin_figs = joinpath(_PATH_TO_FIGS, "thrombinplot$(i).png")
-    Plots.savefig(Plots.plot(T,U[:,3]), path_to_thrombin_figs)
-    path_to_fibrin_figs = joinpath(_PATH_TO_FIGS, "fibrinplot$(i).png")
-    Plots.savefig(Plots.plot(T,U[:,4]), path_to_fibrin_figs)
+    path_to_CFfigs = joinpath(_PATH_TO_FIGS, "tPA_$(tpa_int)nM_CF_run$(i).png")
+    Plots.savefig(Plots.plot(T, CF, xticks=0.0:10:180, xlabel="Time (min)", ylabel="CF (mm)", title="Clot firmness vs. time, [tPA] = $(tpa_int)nM"), path_to_CFfigs)
+    path_to_thrombin_figs = joinpath(_PATH_TO_FIGS, "tPA_$(tpa_int)nM_thrombin_run$(i).png")
+    Plots.savefig(Plots.plot(T, U[:,3], xticks=0.0:10:180,xlabel="Time (min)", ylabel="FIIa (nM)", title="[Thrombin] vs. time, [tPA] = $(tpa_int)nM"), path_to_thrombin_figs)
+    path_to_fibrin_figs = joinpath(_PATH_TO_FIGS, "tPA_$(tpa_int)nM_fibrin_run$(i).png")
+    Plots.savefig(Plots.plot(T, U[:,4], xticks=0.0:10:180, xlabel="Time (min)", ylabel="FIa (nM)", title="[Fibrin] vs. time, [tPA] = $(tpa_int)nM"), path_to_fibrin_figs)
     
 end
