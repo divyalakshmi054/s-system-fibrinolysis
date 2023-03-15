@@ -2,7 +2,7 @@
 include("Include.jl")
 
 # how many samples?
-number_of_samples = 20
+number_of_samples = 12
 number_of_parameters = 10
 ensemble_archive = zeros(number_of_parameters+1,1); # first row is the fitness 
 
@@ -10,11 +10,8 @@ ensemble_archive = zeros(number_of_parameters+1,1); # first row is the fitness
 path_to_training_data = joinpath(_PATH_TO_DATA, "Training-Composition-Transformed-w-Labels.csv")
 full_df = CSV.read(path_to_training_data, DataFrame)
 
-# let's filter visit 4 & no TPA -
-visit_df = filter(:Visit => x->(x=="V4"), full_df)
-tPA_df = filter(:TPA=>x->(x=="N"), visit_df)
-training_df = unique(tPA_df)
-IDs = training_df[!,:ID]
+# let's filter visit 4 -
+visit_df = filter(:Visit => x->(x==4), full_df)
 
 # build the model structure -
 path_to_model_file = joinpath(pwd(), "model", "Fibrinolysis.bst")
