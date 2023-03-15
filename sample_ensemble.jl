@@ -92,10 +92,12 @@ for i ∈ 1:10
     # figures -
     _PATH_TO_FIGS = joinpath(pwd(),"figs")
     path_to_CFfigs = joinpath(_PATH_TO_FIGS, "tPA_$(tpa_int)nM_CF_run$(i).png")
-    Plots.savefig(Plots.plot(T, CF, xticks=0.0:10:180, xlabel="Time (min)", ylabel="CF (mm)", title="Clot firmness vs. time, [tPA] = $(tpa_int)nM"), path_to_CFfigs)
     path_to_thrombin_figs = joinpath(_PATH_TO_FIGS, "tPA_$(tpa_int)nM_thrombin_run$(i).png")
-    Plots.savefig(Plots.plot(T, U[:,3], xticks=0.0:10:180,xlabel="Time (min)", ylabel="FIIa (nM)", title="[Thrombin] vs. time, [tPA] = $(tpa_int)nM"), path_to_thrombin_figs)
     path_to_fibrin_figs = joinpath(_PATH_TO_FIGS, "tPA_$(tpa_int)nM_fibrin_run$(i).png")
+    path_to_CF_ensemble_figs = joinpath(_PATH_TO_FIGS, "tPA_$(tpa_int)nM_CF_runs.png")
+
+    Plots.savefig(Plots.plot(T, CF, xticks=0.0:10:180, xlabel="Time (min)", ylabel="CF (mm)", title="Clot firmness vs. time, [tPA] = $(tpa_int)nM"), path_to_CFfigs)
+    Plots.savefig(Plots.plot(T, U[:,3], xticks=0.0:10:180,xlabel="Time (min)", ylabel="FIIa (nM)", title="[Thrombin] vs. time, [tPA] = $(tpa_int)nM"), path_to_thrombin_figs)
     Plots.savefig(Plots.plot(T, U[:,4], xticks=0.0:10:180, xlabel="Time (min)", ylabel="FIa (nM)", title="[Fibrin] vs. time, [tPA] = $(tpa_int)nM"), path_to_fibrin_figs)
     
 end
