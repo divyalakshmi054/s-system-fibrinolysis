@@ -43,8 +43,8 @@ for i ∈ 1:10
 
     #update α -
     α = dd.α
-    #α[1] = 10.0
-    α[2] = 0.2
+    α[1] = 2.0
+    α[2] = 0.1
     #α[3] = 2.0
     α[4] = 0.025
     α[5] = 0.01
@@ -52,47 +52,38 @@ for i ∈ 1:10
     #update G -
     G = dd.G
     
-    idx = findfirst(x->x=="FII",dd.total_species_list)
-    G[idx, 1] = 0.9
+    FII_idx = findfirst(x->x=="FII",dd.total_species_list)
+    FIIa_idx = findfirst(x->x=="FIIa",dd.total_species_list)
+    AT_idx = findfirst(x->x=="AT",dd.total_species_list)
+    FI_idx = findfirst(x->x=="FI",dd.total_species_list)
+    tPA_idx = findfirst(x->x=="tPA",dd.total_species_list)
+    Plgn_idx = findfirst(x->x=="Plgn",dd.total_species_list)
+    PAI1_idx = findfirst(x->x=="PAI1",dd.total_species_list)
+    Plasmin_idx = findfirst(x->x=="Plasmin",dd.total_species_list)
+    TAFI_idx = findfirst(x->x=="TAFI",dd.total_species_list)
+    FIa_idx = findfirst(x->x=="FIa",dd.total_species_list)
 
-    idx = findfirst(x->x=="FIIa",dd.total_species_list)
-    G[idx, 1] = 0.7
+    # adjusting parameters for r1
+    G[FII_idx, 1] = 0.9
+    G[FIIa_idx, 1] = 0.9
 
-    # what is the index of AT?
-    idx = findfirst(x->x=="AT",dd.total_species_list)
-    G[idx, 2] = 0.15
+    # adjusting parameters for r2
+    G[FIIa_idx, 2] = 1.15
+    G[AT_idx, 2] = 0.25
 
-    # what is the index of FIIa?
-    idx = findfirst(x->x=="FIIa",dd.total_species_list)
-    G[idx, 3] = 0.8
+    # adjusting parameters for r3
+    G[FIIa_idx, 3] = 1.0  
+    G[FI_idx, 3] = 1.0
 
-    # what is the index of FI?
-    idx = findfirst(x->x=="FI",dd.total_species_list)
-    G[idx, 3] = 0.8
+    # adjusting parameters for r4
+    G[tPA_idx,4] = 1.0    
+    G[Plgn_idx,4] = 1.0
+    G[PAI1_idx,4] = 0.5
 
-    # what is the index of tPA?
-    idx = findfirst(x->x=="tPA",dd.total_species_list)
-    G[idx,4] = 1.5
-
-    # what is the index of Plgn?
-    idx = findfirst(x->x=="Plgn",dd.total_species_list)
-    G[idx,4] = 1.0
-
-    # what is the index of PAI1?
-    idx = findfirst(x->x=="PAI1",dd.total_species_list)
-    G[idx,4] = 0.2
-
-    # what is the index of FIa?
-    idx = findfirst(x->x=="Plasmin",dd.total_species_list)
-    G[idx,5] = 0.75
-
-    # what is the index of TAFI?
-    idx = findfirst(x->x=="TAFI",dd.total_species_list)
-    G[idx,5] = 0.1
-
-    # what is the index of FIa?
-    idx = findfirst(x->x=="FIa",dd.total_species_list)
-    G[idx,5] = 0.4
+    # adjusting parameters for r5
+    G[Plasmin_idx,5] = 0.7    
+    G[TAFI_idx,5] = 0.1    
+    G[FIa_idx,5] = 0.4
 
     # run the model -
     global (T,U) = evaluate_w_delay(dd,tspan=(0.0,180.0))
