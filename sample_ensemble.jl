@@ -25,7 +25,7 @@ for i ∈ 1:10
 
     # setup static -
     sfa = dd.static_factors_array
-    sfa[1] = 8.0                    # 1 tPA
+    sfa[1] = 2.0                    # 1 tPA
     sfa[2] = 0.5                    # 2 PAI1; calculated from literature
     sfa[3] = training_df[i,:TAFI]   # 3 TAFI
     sfa[4] = training_df[i,:AT]     # 4 AT  
@@ -70,25 +70,25 @@ for i ∈ 1:10
     idx = findfirst(x->x=="FI",dd.total_species_list)
     G[idx, 3] = 0.8
 
-    # what is the index of TAFI?
+    # what is the index of tPA?
     idx = findfirst(x->x=="tPA",dd.total_species_list)
     G[idx,4] = 1.5
 
-    # what is the index of TAFI?
+    # what is the index of Plgn?
     idx = findfirst(x->x=="Plgn",dd.total_species_list)
     G[idx,4] = 1.0
 
-    # what is the index of TAFI?
+    # what is the index of PAI1?
     idx = findfirst(x->x=="PAI1",dd.total_species_list)
     G[idx,4] = 0.2
 
     # what is the index of FIa?
     idx = findfirst(x->x=="Plasmin",dd.total_species_list)
-    G[idx,5] = 0.8
+    G[idx,5] = 0.75
 
     # what is the index of TAFI?
     idx = findfirst(x->x=="TAFI",dd.total_species_list)
-    G[idx,5] = 0.25
+    G[idx,5] = 0.1
 
     # what is the index of FIa?
     idx = findfirst(x->x=="FIa",dd.total_species_list)
@@ -112,8 +112,8 @@ for i ∈ 1:10
     path_to_fibrin_figs = joinpath(_PATH_TO_FIGS, "tPA_$(tpa_int)nM_fibrin_run$(i).png")
     path_to_CF_ensemble_figs = joinpath(_PATH_TO_FIGS, "tPA_$(tpa_int)nM_CF_runs.png")
 
-    Plots.savefig(Plots.plot(T, CF, xticks=0.0:10:180, xlabel="Time (min)", ylabel="CF (mm)", title="Clot firmness vs. time, [tPA] = $(tpa_int)nM"), path_to_CFfigs)
-    Plots.savefig(Plots.plot(T, U[:,3], xticks=0.0:10:180,xlabel="Time (min)", ylabel="FIIa (nM)", title="[Thrombin] vs. time, [tPA] = $(tpa_int)nM"), path_to_thrombin_figs)
-    Plots.savefig(Plots.plot(T, U[:,4], xticks=0.0:10:180, xlabel="Time (min)", ylabel="FIa (nM)", title="[Fibrin] vs. time, [tPA] = $(tpa_int)nM"), path_to_fibrin_figs)
+    #Plots.savefig(Plots.plot(T, CF, xticks=0.0:10:180, xlabel="Time (min)", ylabel="CF (mm)", title="Clot firmness vs. time, [tPA] = $(tpa_int)nM"), path_to_CFfigs)
+    #Plots.savefig(Plots.plot(T, U[:,3], xticks=0.0:10:180,xlabel="Time (min)", ylabel="FIIa (nM)", title="[Thrombin] vs. time, [tPA] = $(tpa_int)nM"), path_to_thrombin_figs)
+    #Plots.savefig(Plots.plot(T, U[:,4], xticks=0.0:10:180, xlabel="Time (min)", ylabel="FIa (nM)", title="[Fibrin] vs. time, [tPA] = $(tpa_int)nM"), path_to_fibrin_figs)
     
 end

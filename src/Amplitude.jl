@@ -14,7 +14,7 @@ function amplitude(time::Array{Float64,1},fibrin::Array{Float64,1},tPA::Float64,
 
         if(time[i]>td)
             tau = 0.035*(1-(FIIa/prothrombin))
-            S = 66.2+66.1*tPA                   # calculated using clot parameters
+            S = 66.7+0.97*tPA                   # calculated using clot parameters
             a1 = S*(1 - exp(-tau*(time[i]-td)))
         else
             a1 = 0 
