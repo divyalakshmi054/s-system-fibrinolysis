@@ -2,7 +2,7 @@ function amplitude(time::Array{Float64,1},fibrin::Array{Float64,1},tPA::Float64,
 
     Rt = length(time)
     a0 = 0.125                                  # base amplitude
-    kx = 2500 - 500*tPA                         # tPA function
+    kx = 2500 - 1000*tPA                         # tPA function
     td = 5                                      # delay parameter in minutes
 
     CF = Array{Float64}(undef,(Rt,))            # clotting firmness
