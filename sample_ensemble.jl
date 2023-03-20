@@ -43,11 +43,11 @@ for i ∈ 1:10
 
     #update α -
     α = dd.α
-    α[1] = 2.0
-    α[2] = 0.1
-    #α[3] = 2.0
-    α[4] = 0.025
-    α[5] = 0.01
+    α[1] = 4.0
+    α[2] = 0.5
+    α[3] = 10.0
+    α[4] = 0.03
+    α[5] = 0.02
 
     #update G -
     G = dd.G
@@ -68,22 +68,22 @@ for i ∈ 1:10
     G[FIIa_idx, 1] = 0.9
 
     # adjusting parameters for r2
-    G[FIIa_idx, 2] = 1.15
-    G[AT_idx, 2] = 0.25
+    G[FIIa_idx, 2] = 1.1
+    G[AT_idx, 2] = 0.05
 
     # adjusting parameters for r3
-    G[FIIa_idx, 3] = 1.0  
-    G[FI_idx, 3] = 1.0
+    G[FIIa_idx, 3] = 0.5
+    G[FI_idx, 3] = 2.0
 
     # adjusting parameters for r4
-    G[tPA_idx,4] = 1.0    
-    G[Plgn_idx,4] = 1.0
-    G[PAI1_idx,4] = 0.5
+    G[tPA_idx,4] = 0.9    
+    G[Plgn_idx,4] = 0.8
+    G[PAI1_idx,4] = 0.9
 
     # adjusting parameters for r5
     G[Plasmin_idx,5] = 0.7    
     G[TAFI_idx,5] = 0.1    
-    G[FIa_idx,5] = 0.4
+    G[FIa_idx,5] = 0.45
 
     # run the model -
     global (T,U) = evaluate_w_delay(dd,tspan=(0.0,180.0))
@@ -103,8 +103,8 @@ for i ∈ 1:10
     path_to_fibrin_figs = joinpath(_PATH_TO_FIGS, "tPA_$(tpa_int)nM_fibrin_run$(i).png")
     path_to_CF_ensemble_figs = joinpath(_PATH_TO_FIGS, "tPA_$(tpa_int)nM_CF_runs.png")
 
-    #Plots.savefig(Plots.plot(T, CF, xticks=0.0:10:180, xlabel="Time (min)", ylabel="CF (mm)", title="Clot firmness vs. time, [tPA] = $(tpa_int)nM"), path_to_CFfigs)
-    #Plots.savefig(Plots.plot(T, U[:,3], xticks=0.0:10:180,xlabel="Time (min)", ylabel="FIIa (nM)", title="[Thrombin] vs. time, [tPA] = $(tpa_int)nM"), path_to_thrombin_figs)
+    Plots.savefig(Plots.plot(T, CF, xticks=0.0:10:180, xlabel="Time (min)", ylabel="CF (mm)", title="Clot firmness vs. time, [tPA] = $(tpa_int)nM"), path_to_CFfigs)
+    Plots.savefig(Plots.plot(T, U[:,3], xticks=0.0:10:180,xlabel="Time (min)", ylabel="FIIa (nM)", title="[Thrombin] vs. time, [tPA] = $(tpa_int)nM"), path_to_thrombin_figs)
     #Plots.savefig(Plots.plot(T, U[:,4], xticks=0.0:10:180, xlabel="Time (min)", ylabel="FIa (nM)", title="[Fibrin] vs. time, [tPA] = $(tpa_int)nM"), path_to_fibrin_figs)
     
 end
