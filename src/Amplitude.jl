@@ -2,7 +2,7 @@ function amplitude(time::Array{Float64,1},fibrin::Array{Float64,1},tPA::Float64,
 
     Rt = length(time)
     a0 = 0.125                                  # base amplitude
-    kx = 2500 - 2500*tPA                         # tPA function
+    kx = 2500 - 500*tPA                         # tPA function
     td = 5                                      # delay parameter in minutes
 
     CF = Array{Float64}(undef,(Rt,))            # clotting firmness
@@ -13,8 +13,8 @@ function amplitude(time::Array{Float64,1},fibrin::Array{Float64,1},tPA::Float64,
         FIIa = thrombin[i]
 
         if(time[i]>td)
-            tau = 0.035*(1-(FIIa/prothrombin))
-            S = 66.7+0.97*tPA                   # calculated using clot parameters
+            tau = 0.35*(1-(FIIa/prothrombin))
+            S = 66.7+0.25*tPA                   # calculated using clot parameters
             a1 = S*(1 - exp(-tau*(time[i]-td)))
         else
             a1 = 0 

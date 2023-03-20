@@ -25,7 +25,7 @@ for i ∈ 1:10
 
     # setup static -
     sfa = dd.static_factors_array
-    sfa[1] = 2.0                    # 1 tPA
+    sfa[1] = 0.0                    # 1 tPA
     sfa[2] = 0.5                    # 2 PAI1; calculated from literature
     sfa[3] = training_df[i,:TAFI]   # 3 TAFI
     sfa[4] = training_df[i,:AT]     # 4 AT  
