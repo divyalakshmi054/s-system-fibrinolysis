@@ -13,32 +13,38 @@ _PATH_TO_DATA = joinpath(pwd(),"data")
 path_to_training_data = joinpath(_PATH_TO_DATA, "Training-Composition-Transformed-w-Labels.csv")
 training_df = CSV.read(path_to_training_data, DataFrame)
 
+# which visit?
+visit = 1
+
+#let's filter visit 4s since we look to train using that visit
+visit_df = filter(:Visit => x->(x==visit), training_df) 
+
 # size of training set -
-(R,C) = size(training_df)
+(R,C) = size(visit_df)
 
 # main simulation -
 SF = 1e9
-for i ∈ 1:10
+for i ∈ 1:R
 
     # build new model -
     dd = deepcopy(model)
 
     # setup static -
     sfa = dd.static_factors_array
-    sfa[1] = 8.0                    # 1 tPA
+    sfa[1] = 0.0                    # 1 tPA     SET tPA conc here!
     sfa[2] = 0.5                    # 2 PAI1; calculated from literature
-    sfa[3] = training_df[i,:TAFI]   # 3 TAFI
-    sfa[4] = training_df[i,:AT]     # 4 AT  
+    sfa[3] = visit_df[i,:TAFI]   # 3 TAFI
+    sfa[4] = visit_df[i,:AT]     # 4 AT  
     tpa_int = Int64(sfa[1])
     
     # setup dynamic -
     # grab the multiplier from the data -
     ℳ = dd.number_of_dynamic_states
     xₒ = zeros(ℳ)
-    xₒ[1] = training_df[i, :II]      # 1 FII
-    xₒ[2] = training_df[i, :Fbgn]    # 2 FI / Fbgn
+    xₒ[1] = visit_df[i, :II]      # 1 FII
+    xₒ[2] = visit_df[i, :Fbgn]    # 2 FI / Fbgn
     xₒ[3] = (1e-14)*SF               # 3 FIIa
-    xₒ[6] = training_df[i, :Plgn]    # 4 Plgn
+    xₒ[6] = visit_df[i, :Plgn]    # 4 Plgn
     dd.initial_condition_array = xₒ
 
     #update α -
@@ -81,7 +87,7 @@ for i ∈ 1:10
     G[PAI1_idx,4] = 0.9
 
     # adjusting parameters for r5
-    G[Plasmin_idx,5] = 0.7    
+    G[Plasmin_idx,5] = 0.8    
     G[TAFI_idx,5] = 0.1    
     G[FIa_idx,5] = 0.45
 
@@ -93,18 +99,18 @@ for i ∈ 1:10
     
     # dump -
     _PATH_TO_TMP = joinpath(pwd(),"tmp")
-    path_to_sim_data = joinpath(_PATH_TO_TMP, "SIM-TF-NO-TM-SYN1K-$(i).csv")
+    path_to_sim_data = joinpath(_PATH_TO_TMP, "SIM-visit-$(visit)-Fib-$(tpa_int)-nM-tPA-run-$(i).csv")
     CSV.write(path_to_sim_data, Tables.table(hcat(data,CF),header=vcat("Time",dd.list_of_dynamic_species,"CF")))
 
     # figures -
     _PATH_TO_FIGS = joinpath(pwd(),"figs")
-    path_to_CFfigs = joinpath(_PATH_TO_FIGS, "tPA_$(tpa_int)nM_CF_run$(i).png")
-    path_to_thrombin_figs = joinpath(_PATH_TO_FIGS, "tPA_$(tpa_int)nM_thrombin_run$(i).png")
-    path_to_fibrin_figs = joinpath(_PATH_TO_FIGS, "tPA_$(tpa_int)nM_fibrin_run$(i).png")
-    path_to_CF_ensemble_figs = joinpath(_PATH_TO_FIGS, "tPA_$(tpa_int)nM_CF_runs.png")
+    path_to_CFfigs = joinpath(_PATH_TO_FIGS, "tPA_$(tpa_int)nM_visit_$(visit)_CF_run$(i).png")
+    path_to_thrombin_figs = joinpath(_PATH_TO_FIGS, "tPA_$(tpa_int)nM_visit_$(visit)_thrombin_run$(i).png")
+    path_to_fibrin_figs = joinpath(_PATH_TO_FIGS, "tPA_$(tpa_int)nM_visit_$(visit)_fibrin_run$(i).png")
+    path_to_CF_ensemble_figs = joinpath(_PATH_TO_FIGS, "tPA_$(tpa_int)nM_visit_$(visit)_CF_runs.png")
 
-    Plots.savefig(Plots.plot(T, CF, xticks=0.0:10:180, xlabel="Time (min)", ylabel="CF (mm)", title="Clot firmness vs. time, [tPA] = $(tpa_int)nM"), path_to_CFfigs)
-    Plots.savefig(Plots.plot(T, U[:,3], xticks=0.0:10:180,xlabel="Time (min)", ylabel="FIIa (nM)", title="[Thrombin] vs. time, [tPA] = $(tpa_int)nM"), path_to_thrombin_figs)
-    #Plots.savefig(Plots.plot(T, U[:,4], xticks=0.0:10:180, xlabel="Time (min)", ylabel="FIa (nM)", title="[Fibrin] vs. time, [tPA] = $(tpa_int)nM"), path_to_fibrin_figs)
+    Plots.savefig(Plots.plot(T, CF, xticks=0.0:10:180, xlabel="Time (min)", ylabel="CF (mm)", title="Clot firmness vs. time, visit $(visit), [tPA] = $(tpa_int)nM"), path_to_CFfigs)
+    Plots.savefig(Plots.plot(T, U[:,3], xticks=0.0:10:180,xlabel="Time (min)", ylabel="FIIa (nM)", title="[Thrombin] vs. time, visit $(visit), [tPA] = $(tpa_int)nM"), path_to_thrombin_figs)
+    #Plots.savefig(Plots.plot(T, U[:,4], xticks=0.0:10:180, xlabel="Time (min)", ylabel="FIa (nM)", title="[Fibrin] vs. time, visit $(visit), [tPA] = $(tpa_int)nM"), path_to_fibrin_figs)
     
 end
