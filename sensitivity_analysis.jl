@@ -113,16 +113,16 @@ g = [0.9, 0.9, 1.1, 0.05, 0.5, 2.0, 0.9, 0.8, 0.9, 0.8, 0.1, 0.45] # look at sam
 # fusion -
 κ = vcat(α,g)
 
-NP = length(κ) + 1
+NP = length(κ)
 
 L = zeros(NP)
 U = zeros(NP)
-for pᵢ ∈ 1:(NP - 1)
+for pᵢ ∈ 1:(NP)
     L[pᵢ] = 0.1*κ[pᵢ]
     U[pᵢ] = 10.0*κ[pᵢ]
 end
-L[end] = -3.0;
-U[end] = 0.0;
+#L[end] = -3.0;
+#U[end] = 0.0;
 
 # setup call to Morris method -
 F(κ) =  performance(κ, model, visit_df, 1)
