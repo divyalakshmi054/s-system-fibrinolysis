@@ -2,7 +2,7 @@
 include("Include.jl")
 
 # build performance function -
-function performance(k, model::BSTModel, visit_df::DataFrame,i::Int64)
+function performance(κ, model::BSTModel, visit_df::DataFrame,i::Int64)
 
     # main simulation -
     SF = 1e9
@@ -25,8 +25,8 @@ function performance(k, model::BSTModel, visit_df::DataFrame,i::Int64)
     model.initial_condition_array = xₒ
     
     #get the parameters -
-    tmp_alpha = k[1:end-12]
-    g = k[end-11:end]
+    tmp_alpha = κ[1:end-12]
+    g = κ[end-11:end]
 
     # set new parameters -
     model.α = tmp_alpha;
@@ -73,11 +73,11 @@ function performance(k, model::BSTModel, visit_df::DataFrame,i::Int64)
     (T,U) = evaluate_w_delay(model, tspan = (0.0, 180.0))
     CF = Array{Float64,1}
     CF = amplitude(T,U[:,4],sfa[1],U[:,3],xₒ[1])
-    
+    clot_firmness = transpose(CF)
     idx = findfirst(x->x==90,T)
 
     # test -
-    return integrate(T[1:idx],CF[1:idx])    # AUC
+    return integrate(T[1:idx],clot_firmness[1:idx])    # AUC
 end
 
 # build the model structure -
@@ -111,20 +111,24 @@ visit_df = filter(:Visit => x->(x==visit), training_df)
 g = [0.9, 0.9, 1.1, 0.05, 0.5, 2.0, 0.9, 0.8, 0.9, 0.8, 0.1, 0.45] # look at sample_ensemble.jl for specific G values
 
 # fusion -
-k = vcat(α,g)
+κ = vcat(α,g)
 
-NP = length(k)
+NP = length(κ) + 1
 
 L = zeros(NP)
 U = zeros(NP)
-for pᵢ ∈ 1:(NP)
-    L[pᵢ] = 0.1*k[pᵢ]
-    U[pᵢ] = 10.0*k[pᵢ]
+for pᵢ ∈ 1:(NP - 1)
+    L[pᵢ] = 0.1*κ[pᵢ]
+    U[pᵢ] = 10.0*κ[pᵢ]
 end
+L[end] = -3.0;
+U[end] = 0.0;
 
 # setup call to Morris method -
-F(k) =  performance(k, model, visit_df, 1)
-m = gsa(F, Morris(num_trajectory=10000), [[L[i],U[i]] for i in 1:(NP)]);
+F(κ) =  performance(κ, model, visit_df, 1)
+m = morris(F, L, U);
+
+# m = gsa(F, Morris(num_trajectory=10000), [[L[i],U[i]] for i in 1:(NP)]);
 
 # dump sensitivity data to disk -
-jldsave("Sensitivity-Morris-P1-V4.jld2"; mean=m.means, variance=m.variances)
+# jldsave("Sensitivity-Morris-P1-V4.jld2"; mean=m.means, variance=m.variances)
