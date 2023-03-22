@@ -62,10 +62,11 @@ function model_output_vector(T::Array{Float64,1},X::Array{Float64,1})::Array{Flo
 end
 
 function auc(T::Array{Float64,1}, X::Array{Float64,1})::Float64    
-    TL = length(T)
-    half = Int64(TL/2)
-    t = T[1:half]
-    x = X[1:half]
+    #TL = length(T)/2
+    #half = Int64(TL)
+    idx = findfirst(x->x==90,T)
+    t = T[1:idx]
+    x = X[1:idx]
     return integrate(t,x)
     #return quadgk(X,0.0,90.0)
 end

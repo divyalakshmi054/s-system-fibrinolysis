@@ -71,14 +71,14 @@ function performance(k, model::BSTModel, visit_df::DataFrame,i::Int64)
     model.G = G;
 
     # solve -
-    (T,X) = evaluate_w_delay(model, tspan = (0.0, 180.0))
-    data = [T U]
+    (T,U) = evaluate_w_delay(model, tspan = (0.0, 180.0))
     CF = Array{Float64,1}
     CF = amplitude(T,U[:,4],sfa[1],U[:,3],xₒ[1])
-    Clot_Parameters = model_output_vector(T,CF)
+    Xₘ = hcat(U,CF)
+    Yₘ = model_output_vector(T, Xₘ[:,9])
 
     # test -
-    return Clot_Parameters
+    return Yₘ
 end
 
 # build the model structure -
@@ -116,16 +116,16 @@ k = vcat(α,g)
 
 NP = length(k)
 
-L = zeros(NP-1)
-U = zeros(NP-1)
-for pᵢ ∈ 1:(NP - 1)
-    L[pᵢ] = 0.1*pset_df[pᵢ + 1,:parameters]
-    U[pᵢ] = 10.0*pset_df[pᵢ + 1,:parameters]
+L = zeros(NP)
+U = zeros(NP)
+for pᵢ ∈ 1:(NP)
+    L[pᵢ] = 0.1*k[pᵢ]
+    U[pᵢ] = 10.0*k[pᵢ]
 end
 
 # setup call to Morris method -
 F(κ) =  performance(k, model, visit_df, 1)
-m = gsa(F, Morris(num_trajectory=10000), [[L[i],U[i]] for i in 1:(NP-1)]);
+m = gsa(F, Morris(num_trajectory=10000), [[L[i],U[i]] for i in 1:(NP)]);
 
 # dump sensitivity data to disk -
 jldsave("Sensitivity-Morris-P1-V1.jld2"; mean=m.means, variance=m.variances)
