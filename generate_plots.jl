@@ -73,8 +73,8 @@ fig1 = plot(t, sim_data, xticks=0.0:15:90, yticks=0.0:15:90, xlim = (0,90), ylim
 #    scatter!(real_t,v1_no_tpa_plot[:,1], xticks=0.0:15:90,  xlim = (0,90), mc= :gray, msc= :gray, ma=0.4,ms=1,label="Experimental")
 
 # ===== uncomment "couplet" below for Visit 1, with tPA ========== #
-#    scatter!(real_t,v1_y_tpa_plot, xticks=0.0:15:90,  xlim = (0,90), mc= :gray, msc= :gray, ma=0.4,ms=1,label="")
-#    scatter!(real_t,v1_y_tpa_plot[:,1], xticks=0.0:15:90,  xlim = (0,90), mc= :gray, msc= :gray, ma=0.4,ms=1,label="Experimental")
+ #   scatter!(real_t,v1_y_tpa_plot, xticks=0.0:15:90,  xlim = (0,90), mc= :gray, msc= :gray, ma=0.4,ms=1,label="")
+  #  scatter!(real_t,v1_y_tpa_plot[:,1], xticks=0.0:15:90,  xlim = (0,90), mc= :gray, msc= :gray, ma=0.4,ms=1,label="Experimental")
 
 # ===== uncomment "couplet" below for Visit 2, no tPA ========== #
 #    scatter!(real_t,v2_no_tpa_plot, xticks=0.0:15:90,  xlim = (0,90), mc= :gray, msc= :gray, ma=0.4,ms=1,label="")
@@ -85,16 +85,16 @@ fig1 = plot(t, sim_data, xticks=0.0:15:90, yticks=0.0:15:90, xlim = (0,90), ylim
     scatter!(real_t,v2_y_tpa_plot[:,1], xticks=0.0:15:90,  xlim = (0,90), mc= :gray, msc= :gray, ma=0.4,ms=1,label="Experimental")
 
 # ===== uncomment "couplet" below for Visit 4, no tPA ========== #
-#    scatter!(real_t,v4_no_tpa_plot, xticks=0.0:15:90,  xlim = (0,90), mc= :gray50, msc= :gray50, ma=0.3,ms=1,label="")
-#    scatter!(real_t,v4_no_tpa_plot[:,1], xticks=0.0:15:90,  xlim = (0,90), mc= :gray50, msc= :gray50, ma=0.3,ms=1,label="Experimental")
+ #   scatter!(real_t,v4_no_tpa_plot, xticks=0.0:15:90,  xlim = (0,90), mc= :gray50, msc= :gray50, ma=0.3,ms=1,label="")
+ #   scatter!(real_t,v4_no_tpa_plot[:,1], xticks=0.0:15:90,  xlim = (0,90), mc= :gray50, msc= :gray50, ma=0.3,ms=1,label="Experimental")
 
 # ===== uncomment "couplet" below for Visit 4, with tPA ========== #
 #    scatter!(real_t,v4_y_tpa_plot, xticks=0.0:15:90,  xlim = (0,90), mc= :gray, msc= :gray, ma=0.4, ms=1,label="")
 #    scatter!(real_t,v4_y_tpa_plot[:,1], xticks=0.0:15:90,  xlim = (0,90), mc= :gray, msc= :gray, ma=0.4, ms=1,label="Experimental")
 
 
-    savefig(fig1,path_to_CF_ens_figs_png)
-    savefig(fig1,path_to_CF_ens_figs_pdf)
+#    savefig(fig1,path_to_CF_ens_figs_png)
+#    savefig(fig1,path_to_CF_ens_figs_pdf)
 
 
 
