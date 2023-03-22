@@ -50,18 +50,23 @@ function learn_optim(index::Int, model::BSTModel, training_df::DataFrame;
     κ = [
             
             # default: hand fit set -
-            1.0         0.01 10.0       ; # 1
-            0.2         0.01 10.0       ; # 2
-            1.0         0.01 10.0       ; # 3
-            0.025       0.01 10.0       ; # 4
-            0.01        0.01 10.0       ; # 5
+            4.0         0.01 10.0       ; # 1
+            0.25        0.01 10.0       ; # 2
+            10.0        0.01 10.0       ; # 3
+            0.03        0.01 10.0       ; # 4
+            0.02        0.01 10.0       ; # 5
             0.9         0.01 10.0       ; # 6
-            0.7         0.01 10.0       ; # 7
-            0.15        0.01 10.0       ; # 8
-            0.75        0.01 10.0       ; # 9
-            0.75        0.01 10.0       ; # 10
-            0.1         0.01 10.0       ; # 11
-            0.2         0.01 10.0       ; # 12
+            0.9         0.01 10.0       ; # 7
+            1.1         0.01 10.0       ; # 8
+            0.05        0.01 10.0       ; # 9
+            0.5         0.01 10.0       ; # 10
+            2.0         0.01 10.0       ; # 11
+            0.9         0.01 10.0       ; # 12
+            0.8         0.01 10.0       ; # 13
+            0.9         0.01 10.0       ; # 14
+            0.8         0.01 10.0       ; # 15
+            0.1         0.01 10.0       ; # 16
+            0.45        0.01 10.0       ; # 17
         ];
 
     # set default set as the start -
@@ -84,27 +89,45 @@ function learn_optim(index::Int, model::BSTModel, training_df::DataFrame;
     # 1 - 9 : α vector
     model.α = p_best[1:5]
     G = model.G
-    idx = findfirst(x->x=="FII",dd.total_species_list)
-    G[idx, 1] = p_best[6]
-    idx = findfirst(x->x=="FIIa",dd.total_species_list)
-    G[idx, 1] = p_best[7]
-    idx = findfirst(x->x=="AT", model.total_species_list)   # 6
-    G[idx, 2] = p_best[8]
-    idx = findfirst(x->x=="FIIa", model.total_species_list) # 7
-    G[idx, 3] = p_best[9]
-    idx = findfirst(x->x=="FI", model.total_species_list)   # 8
-    G[idx, 3] = p_best[10]
-    idx = findfirst(x->x=="TAFI",model.total_species_list)  # 9
-    G[idx,5] = p_best[11]
-    idx = findfirst(x->x=="FIa",model.total_species_list)   # 10
-    G[idx,5] = p_best[12]
+    FII_idx = findfirst(x->x=="FII",dd.total_species_list)
+    FIIa_idx = findfirst(x->x=="FIIa",dd.total_species_list)
+    AT_idx = findfirst(x->x=="AT",dd.total_species_list)
+    FI_idx = findfirst(x->x=="FI",dd.total_species_list)
+    tPA_idx = findfirst(x->x=="tPA",dd.total_species_list)
+    Plgn_idx = findfirst(x->x=="Plgn",dd.total_species_list)
+    PAI1_idx = findfirst(x->x=="PAI1",dd.total_species_list)
+    Plasmin_idx = findfirst(x->x=="Plasmin",dd.total_species_list)
+    TAFI_idx = findfirst(x->x=="TAFI",dd.total_species_list)
+    FIa_idx = findfirst(x->x=="FIa",dd.total_species_list)
+
+    # adjusting parameters for r1
+    G[FII_idx, 1] = p_best[6]
+    G[FIIa_idx, 1] = p_best[7]
+
+    # adjusting parameters for r2
+    G[FIIa_idx, 2] = p_best[8]
+    G[AT_idx, 2] = p_best[9]
+
+    # adjusting parameters for r3
+    G[FIIa_idx, 3] = p_best[10]
+    G[FI_idx, 3] = p_best[11]
+
+    # adjusting parameters for r4
+    G[tPA_idx,4] = p_best[12]    
+    G[Plgn_idx,4] = p_best[13]
+    G[PAI1_idx,4] = p_best[14]
+
+    # adjusting parameters for r5
+    G[Plasmin_idx,5] = p_best[15]    
+    G[TAFI_idx,5] = p_best[16]  
+    G[FIa_idx,5] = p_best[17]
 
     # run the model -
-    (T,U) = evaluate(model)
+    (T,U) = evaluate_w_delay(model, tspan = (0.0, 180.0))
     CF = Array{Float64,1}
     CF = amplitude(T,U[:,4],sfa[1],U[:,3],xₒ[1])
-    Xₘ = hcat(CF)
-    Yₘ = model_output_vector(T, CF) # properties of the CF curve 
+    Xₘ = hcat(U,CF)
+    Yₘ = model_output_vector(T, Xₘ[:,9]) # properties of the CF curve 
     
     return (p_best, T, Xₘ, Yₘ, Y)
 end

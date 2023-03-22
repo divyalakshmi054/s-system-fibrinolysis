@@ -12,6 +12,7 @@ using NumericalIntegration
 using Optim
 using Colors
 using JLD2
+using QuadGK
 
 # my files -
 include("Amplitude.jl")

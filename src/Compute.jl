@@ -25,7 +25,7 @@ function clot_properties()
     end
 
     T = training_df[:,1]                            # define time
-    data_vector = Array{Float64}(undef,(6,(C-1)))   # 5 properties, C-1 patients
+    data_vector = Array{Float64}(undef,(7,(C-1)))   # 5 properties, C-1 patients
 
     for i ∈ 1:(C-1)                                 #omitting column 1: time
         X = training_df[1:end,i+1]
@@ -34,7 +34,7 @@ function clot_properties()
     end
     print(size(data_vector))
     #time to dump, finally! -
-    data_output_header = ["CT", "CFT", "MCF","MCFt", "alpha","A30"]
+    data_output_header = ["CT", "CFT", "MCF","MCFt", "alpha","A30", "AUC"]
     CSV.write(joinpath(_PATH_TO_DATA,"Training-Clot-Parameters.csv"),Tables.table(transpose(data_vector));header = data_output_header)
 end
 
@@ -48,6 +48,7 @@ function model_output_vector(T::Array{Float64,1},X::Array{Float64,1})::Array{Flo
     MCF_t = MCF_time(MCF,T,X)
     alpha_slope = compute_alpha_slope(CFT, CT, T, X)*180/pi
     a_30 = compute_amp_30(CT,T,X)
+    area_under_curve = auc(T,X)
 
     #it's go time -
     push!(output_vector,CT)
@@ -56,7 +57,12 @@ function model_output_vector(T::Array{Float64,1},X::Array{Float64,1})::Array{Flo
     push!(output_vector,MCF_t)
     push!(output_vector,alpha_slope)
     push!(output_vector,a_30)
+    push!(output_vector,area_under_curve)
     return output_vector
+end
+
+function auc(T::Array{Float64,1}, X::Array{Float64,1})::Float64    
+    return quadgk(X,0.0,90.0)
 end
 
 function clot_time(rule::Function, T::Array{Float64,1}, X::Array{Float64,1})::Float64
