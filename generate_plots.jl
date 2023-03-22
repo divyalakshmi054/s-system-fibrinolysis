@@ -1,9 +1,10 @@
 include("Include.jl")
 #pythonplot()
+
 # which visit?
-visit = 1
+visit = 2
 # tpa level?
-tpa = 0
+tpa = 4
 
 # loading up simulation data -
 _PATH_TO_TMP_ = joinpath(pwd(),"tmp")
@@ -39,10 +40,13 @@ v4_yes_df = filter(:Visit => x->(x=="V4"), yes_tpa_df)
 real_t = collect(5:5:10800)/60
 no_tpa_plot = transpose(Array{Float64}(no_tpa_df[:,4:end]))
 yes_tpa_plot = transpose(Array{Float64}(yes_tpa_df[:,4:end]))
+
 v1_no_tpa_plot = transpose(Array{Float64}(v1_no_df[:,4:end]))
 v1_y_tpa_plot = transpose(Array{Float64}(v1_yes_df[:,4:end]))
+
 v2_no_tpa_plot = transpose(Array{Float64}(v2_no_df[:,4:end]))
 v2_y_tpa_plot = transpose(Array{Float64}(v2_yes_df[:,4:end]))
+
 v4_no_tpa_plot = transpose(Array{Float64}(v4_no_df[:,4:end]))
 v4_y_tpa_plot = transpose(Array{Float64}(v4_yes_df[:,4:end]))
 
@@ -58,16 +62,36 @@ _PATH_TO_FIGS = joinpath(pwd(),"figs\\ens")
 path_to_CF_ens_figs_png = joinpath(_PATH_TO_FIGS, "tPA_$(tpa)nM_visit_$(visit)_CF_ens.png") 
 path_to_CF_ens_figs_pdf = joinpath(_PATH_TO_FIGS, "tPA_$(tpa)nM_visit_$(visit)_CF_ens.pdf") 
 
-# plot set of simulations for a given visit number
-fig1 = plot(t, sim_data, xticks=0.0:30:180, ylim = (0,80),label="",lw = 1,c=colorant"#89CCE2", bg="aliceblue", background_color_outside="white", framestyle = :box, xlabel="Time (min)", ylabel="CF (mm)", title="Clot firmness vs. time, visit $(visit), [tPA] = $(tpa)nM")
-#    scatter!(real_t,v1_y_tpa_plot ,mc= :gray, msc= :gray, ma=0.2,ms=1,label="")
-    scatter!(real_t,v1_no_tpa_plot ,mc= :gray, msc= :gray, ma=0.2,ms=1,label="")
+# plot set of simulations for a given visit number, [tPA] combo
+fig1 = plot(t, sim_data, xticks=0.0:15:90, yticks=0.0:15:90, xlim = (0,90), ylim = (0,90),label="",lw = 1.25,c=colorant"#89CCE2", bg="aliceblue", background_color_outside="white", framestyle = :box, xlabel="Time (min)", ylabel="CF (mm)")
+       plot!(t,sim_data[:,1,], xticks=0.0:15:90, yticks=0.0:15:90, xlim = (0,90), ylim = (0,90),label="Simulation",lw = 1.25,c=colorant"#89CCE2", bg="aliceblue", background_color_outside="white", framestyle = :box, xlabel="Time (min)", ylabel="CF (mm)",fg_legend = :transparent)
 
-#    scatter!(real_t,v2_y_tpa_plot ,mc= :gray, msc= :gray, ma=0.2,ms=1,label="")
-#    scatter!(real_t,v2_no_tpa_plot ,mc= :gray, msc= :gray, ma=0.2,ms=1,label="")
+# ======== plotting experimental data on same axes ================= #
 
-#    scatter!(real_t,v4_y_tpa_plot ,mc= :gray, msc= :gray, ma=0.2,ms=1,label="")
-#    scatter!(real_t,v4_no_tpa_plot ,mc= :gray, msc= :gray, ma=0.2,ms=1,label="")
+# ===== uncomment "couplet" below for Visit 1, no tPA ========== #
+#    scatter!(real_t,v1_no_tpa_plot, xticks=0.0:15:90,  xlim = (0,90), mc= :gray, msc= :gray, ma=0.4,ms=1,label="")
+#    scatter!(real_t,v1_no_tpa_plot[:,1], xticks=0.0:15:90,  xlim = (0,90), mc= :gray, msc= :gray, ma=0.4,ms=1,label="Experimental")
+
+# ===== uncomment "couplet" below for Visit 1, with tPA ========== #
+#    scatter!(real_t,v1_y_tpa_plot, xticks=0.0:15:90,  xlim = (0,90), mc= :gray, msc= :gray, ma=0.4,ms=1,label="")
+#    scatter!(real_t,v1_y_tpa_plot[:,1], xticks=0.0:15:90,  xlim = (0,90), mc= :gray, msc= :gray, ma=0.4,ms=1,label="Experimental")
+
+# ===== uncomment "couplet" below for Visit 2, no tPA ========== #
+#    scatter!(real_t,v2_no_tpa_plot, xticks=0.0:15:90,  xlim = (0,90), mc= :gray, msc= :gray, ma=0.4,ms=1,label="")
+#    scatter!(real_t,v2_no_tpa_plot[:,1], xticks=0.0:15:90,  xlim = (0,90), mc= :gray, msc= :gray, ma=0.4,ms=1,label="Experimental")
+
+# ===== uncomment "couplet" below for Visit 2, with tPA ========== #
+    scatter!(real_t,v2_y_tpa_plot, xticks=0.0:15:90,  xlim = (0,90), mc= :gray, msc= :gray, ma=0.4,ms=1,label="")
+    scatter!(real_t,v2_y_tpa_plot[:,1], xticks=0.0:15:90,  xlim = (0,90), mc= :gray, msc= :gray, ma=0.4,ms=1,label="Experimental")
+
+# ===== uncomment "couplet" below for Visit 4, no tPA ========== #
+#    scatter!(real_t,v4_no_tpa_plot, xticks=0.0:15:90,  xlim = (0,90), mc= :gray50, msc= :gray50, ma=0.3,ms=1,label="")
+#    scatter!(real_t,v4_no_tpa_plot[:,1], xticks=0.0:15:90,  xlim = (0,90), mc= :gray50, msc= :gray50, ma=0.3,ms=1,label="Experimental")
+
+# ===== uncomment "couplet" below for Visit 4, with tPA ========== #
+#    scatter!(real_t,v4_y_tpa_plot, xticks=0.0:15:90,  xlim = (0,90), mc= :gray, msc= :gray, ma=0.4, ms=1,label="")
+#    scatter!(real_t,v4_y_tpa_plot[:,1], xticks=0.0:15:90,  xlim = (0,90), mc= :gray, msc= :gray, ma=0.4, ms=1,label="Experimental")
+
 
     savefig(fig1,path_to_CF_ens_figs_png)
     savefig(fig1,path_to_CF_ens_figs_pdf)

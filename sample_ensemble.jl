@@ -14,7 +14,7 @@ path_to_training_data = joinpath(_PATH_TO_DATA, "Training-Composition-Transforme
 training_df = CSV.read(path_to_training_data, DataFrame)
 
 # which visit?
-visit = 1
+visit = 4
 
 #let's filter visit 4s since we look to train using that visit
 visit_df = filter(:Visit => x->(x==visit), training_df) 
