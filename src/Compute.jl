@@ -62,7 +62,12 @@ function model_output_vector(T::Array{Float64,1},X::Array{Float64,1})::Array{Flo
 end
 
 function auc(T::Array{Float64,1}, X::Array{Float64,1})::Float64    
-    return quadgk(X,0.0,90.0)
+    TL = length(T)
+    half = Int64(TL/2)
+    t = T[1:half]
+    x = X[1:half]
+    return integrate(t,x)
+    #return quadgk(X,0.0,90.0)
 end
 
 function clot_time(rule::Function, T::Array{Float64,1}, X::Array{Float64,1})::Float64
