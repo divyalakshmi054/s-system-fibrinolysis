@@ -13,7 +13,6 @@ function performance(k, model::BSTModel, visit_df::DataFrame,i::Int64)
     sfa[2] = 0.5                    # 2 PAI1    calculated from literature
     sfa[3] = visit_df[i,:TAFI]      # 3 TAFI
     sfa[4] = visit_df[i,:AT]        # 4 AT  
-    tpa_int = Int64(sfa[1])
      
     # setup dynamic -
     # grab the multiplier from the data -
@@ -74,11 +73,11 @@ function performance(k, model::BSTModel, visit_df::DataFrame,i::Int64)
     (T,U) = evaluate_w_delay(model, tspan = (0.0, 180.0))
     CF = Array{Float64,1}
     CF = amplitude(T,U[:,4],sfa[1],U[:,3],xₒ[1])
-    Xₘ = hcat(U,CF)
-    Yₘ = model_output_vector(T, Xₘ[:,9])
+    
+    idx = findfirst(x->x==90,T)
 
     # test -
-    return Yₘ
+    return integrate(T[1:idx],CF[1:idx])    # AUC
 end
 
 # build the model structure -
@@ -124,7 +123,7 @@ for pᵢ ∈ 1:(NP)
 end
 
 # setup call to Morris method -
-F(κ) =  performance(k, model, visit_df, 1)
+F(k) =  performance(k, model, visit_df, 1)
 m = gsa(F, Morris(num_trajectory=10000), [[L[i],U[i]] for i in 1:(NP)]);
 
 # dump sensitivity data to disk -
