@@ -47,13 +47,5 @@ fig1 = plot(t, sim_data, xticks=0.0:15:90, yticks=0.0:15:90, xlim = (0,90), ylim
        scatter!(real_t,real_cf, xticks=0.0:15:90,  xlim = (0,90), mc= :salmon, msc= :salmon, ma=0.3, ms=1,label="")
        scatter!(real_t,real_cf[:,1], xticks=0.0:15:90,  xlim = (0,90), mc= :salmon, msc= :salmon, ma=0.3, ms=1,label="Experimental")
 
-
-    savefig(fig1,path_to_CF_ens_figs_png)
-    savefig(fig1,path_to_CF_ens_figs_pdf)
-
-
-
-
-
-
-
+savefig(fig1,path_to_CF_ens_figs_png)
+savefig(fig1,path_to_CF_ens_figs_pdf)
