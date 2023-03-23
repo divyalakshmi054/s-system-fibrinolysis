@@ -2,6 +2,8 @@
 include("Include.jl")
 using Plots
 
+#=========== set Visit number in line 19; set [tPA] in line 36 ============#
+
 # build the model structure -
 path_to_model_file = joinpath(pwd(), "model", "Fibrinolysis.bst")
 
@@ -14,7 +16,7 @@ path_to_training_data = joinpath(_PATH_TO_DATA, "Training-Composition-Transforme
 training_df = CSV.read(path_to_training_data, DataFrame)
 
 # which visit?
-visit = 2
+visit = 4
 
 #let's filter visit 4s since we look to train using that visit
 visit_df = filter(:Visit => x->(x==visit), training_df) 
@@ -107,10 +109,10 @@ for i ∈ 1:R
     path_to_CFfigs = joinpath(_PATH_TO_FIGS, "tPA_$(tpa_int)nM_visit_$(visit)_CF_run$(i).png")
     path_to_thrombin_figs = joinpath(_PATH_TO_FIGS, "tPA_$(tpa_int)nM_visit_$(visit)_thrombin_run$(i).png")
     path_to_fibrin_figs = joinpath(_PATH_TO_FIGS, "tPA_$(tpa_int)nM_visit_$(visit)_fibrin_run$(i).png")
-    path_to_CF_ensemble_figs = joinpath(_PATH_TO_FIGS, "tPA_$(tpa_int)nM_visit_$(visit)_CF_runs.png")
+    #path_to_CF_ensemble_figs = joinpath(_PATH_TO_FIGS, "tPA_$(tpa_int)nM_visit_$(visit)_CF_runs.png")
 
-    Plots.savefig(Plots.plot(T, CF, xticks=0.0:10:180, xlabel="Time (min)", ylabel="CF (mm)", title="Clot firmness vs. time, visit $(visit), [tPA] = $(tpa_int)nM"), path_to_CFfigs)
-    Plots.savefig(Plots.plot(T, U[:,3], xticks=0.0:10:180,xlabel="Time (min)", ylabel="FIIa (nM)", title="[Thrombin] vs. time, visit $(visit), [tPA] = $(tpa_int)nM"), path_to_thrombin_figs)
+    #Plots.savefig(Plots.plot(T, CF, xticks=0.0:10:180, xlabel="Time (min)", ylabel="CF (mm)", title="Clot firmness vs. time, visit $(visit), [tPA] = $(tpa_int)nM"), path_to_CFfigs)
+    #Plots.savefig(Plots.plot(T, U[:,3], xticks=0.0:10:180,xlabel="Time (min)", ylabel="FIIa (nM)", title="[Thrombin] vs. time, visit $(visit), [tPA] = $(tpa_int)nM"), path_to_thrombin_figs)
     #Plots.savefig(Plots.plot(T, U[:,4], xticks=0.0:10:180, xlabel="Time (min)", ylabel="FIa (nM)", title="[Fibrin] vs. time, visit $(visit), [tPA] = $(tpa_int)nM"), path_to_fibrin_figs)
     
 end
