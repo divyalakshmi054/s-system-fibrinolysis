@@ -1,10 +1,10 @@
 include("Include.jl")
 
 # which visit?
-visit = 1
+visit = 4
 
 # tpa level?
-tpa = 4
+tpa = 0
 
 # loading up simulation data -
 _PATH_TO_TMP_ = joinpath(pwd(),"tmp")
@@ -44,8 +44,8 @@ path_to_CF_ens_figs_pdf = joinpath(_PATH_TO_ENS_FIGS, "tPA_$(tpa)nM_visit_$(visi
 fig1 = plot(t, sim_data, xticks=0.0:15:90, yticks=0.0:15:90, xlim = (0,90), ylim = (0,90),label="",lw = 1.25,c=colorant"#89CCE2", bg="aliceblue", background_color_outside="white", framestyle = :box, xlabel="Time (min)", ylabel="CF (mm)")
        plot!(t,sim_data[:,1,], xticks=0.0:15:90, yticks=0.0:15:90, xlim = (0,90), ylim = (0,90),label="Simulation",lw = 1.25,c=colorant"#89CCE2", bg="aliceblue", background_color_outside="white", framestyle = :box, xlabel="Time (min)", ylabel="CF (mm)",fg_legend = :transparent)
 
-       scatter!(real_t,real_cf, xticks=0.0:15:90,  xlim = (0,90), mc= :salmon, msc= :salmon, ma=0.3, ms=1,label="")
-       scatter!(real_t,real_cf[:,1], xticks=0.0:15:90,  xlim = (0,90), mc= :salmon, msc= :salmon, ma=0.3, ms=1,label="Experimental")
+       scatter!(real_time,real_cf, xticks=0.0:15:90,  xlim = (0,90), mc= :salmon, msc= :salmon, ma=0.3, ms=1,label="")
+       scatter!(real_time,real_cf[:,1], xticks=0.0:15:90,  xlim = (0,90), mc= :salmon, msc= :salmon, ma=0.3, ms=1,label="Experimental")
 
 savefig(fig1,path_to_CF_ens_figs_png)
 savefig(fig1,path_to_CF_ens_figs_pdf)

@@ -16,3 +16,4 @@ using QuadGK
 
 # my files -
 include("Amplitude.jl")
+#include("Compute.jl")

@@ -33,7 +33,7 @@ for i ∈ 1:R
 
     # setup static -
     sfa = dd.static_factors_array
-    sfa[1] = 4.0                    # 1 tPA     SET tPA conc here!
+    sfa[1] = 0.0                    # 1 tPA     SET tPA conc here!
     sfa[2] = 0.5                    # 2 PAI1; calculated from literature
     sfa[3] = visit_df[i,:TAFI]   # 3 TAFI
     sfa[4] = visit_df[i,:AT]     # 4 AT  
@@ -51,9 +51,9 @@ for i ∈ 1:R
 
     #update α -
     α = dd.α
-    α[1] = 4.0
+    α[1] = 0.5
     α[2] = 0.5
-    α[3] = 1.0
+    α[3] = 0.5
     α[4] = 0.03
     α[5] = 0.02
 
@@ -112,7 +112,7 @@ for i ∈ 1:R
     #path_to_CF_ensemble_figs = joinpath(_PATH_TO_FIGS, "tPA_$(tpa_int)nM_visit_$(visit)_CF_runs.png")
 
     #Plots.savefig(Plots.plot(T, CF, xticks=0.0:10:180, xlabel="Time (min)", ylabel="CF (mm)", title="Clot firmness vs. time, visit $(visit), [tPA] = $(tpa_int)nM"), path_to_CFfigs)
-    #Plots.savefig(Plots.plot(T, U[:,3], xticks=0.0:10:180,xlabel="Time (min)", ylabel="FIIa (nM)", title="[Thrombin] vs. time, visit $(visit), [tPA] = $(tpa_int)nM"), path_to_thrombin_figs)
+    Plots.savefig(Plots.plot(T, U[:,3], xticks=0.0:10:180,xlabel="Time (min)", ylabel="FIIa (nM)", title="[Thrombin] vs. time, visit $(visit), [tPA] = $(tpa_int)nM"), path_to_thrombin_figs)
     #Plots.savefig(Plots.plot(T, U[:,4], xticks=0.0:10:180, xlabel="Time (min)", ylabel="FIa (nM)", title="[Fibrin] vs. time, visit $(visit), [tPA] = $(tpa_int)nM"), path_to_fibrin_figs)
     
 end

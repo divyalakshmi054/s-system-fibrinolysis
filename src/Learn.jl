@@ -52,7 +52,7 @@ function learn_optim(index::Int, model::BSTModel, training_df::DataFrame;
             # default: hand fit set -
             4.0         0.01 10.0       ; # 1
             0.25        0.01 10.0       ; # 2
-            10.0        0.01 10.0       ; # 3
+            1.0        0.01 10.0       ; # 3
             0.03        0.01 10.0       ; # 4
             0.02        0.01 10.0       ; # 5
             0.9         0.01 10.0       ; # 6
@@ -64,8 +64,8 @@ function learn_optim(index::Int, model::BSTModel, training_df::DataFrame;
             0.9         0.01 10.0       ; # 12
             0.8         0.01 10.0       ; # 13
             0.9         0.01 10.0       ; # 14
-            0.8         0.01 10.0       ; # 15
-            0.1         0.01 10.0       ; # 16
+            0.75        0.01 10.0       ; # 15
+            0.75        0.01 10.0       ; # 16
             0.45        0.01 10.0       ; # 17
         ];
 
@@ -119,7 +119,7 @@ function learn_optim(index::Int, model::BSTModel, training_df::DataFrame;
 
     # adjusting parameters for r5
     G[Plasmin_idx,5] = p_best[15]    
-    G[TAFI_idx,5] = p_best[16]  
+    G[TAFI_idx,5] = -1*p_best[16]  
     G[FIa_idx,5] = p_best[17]
 
     # run the model -

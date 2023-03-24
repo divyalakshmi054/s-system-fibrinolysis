@@ -2,14 +2,14 @@
 include("Include.jl")
 
 # build performance function -
-function performance(κ, model::BSTModel, visit_df::DataFrame,i::Int64)
+function performance(κ, model::BSTModel, visit_df::DataFrame, i::Int64)
 
     # main simulation -
     SF = 1e9
 
     # setup static -
     sfa = model.static_factors_array
-    sfa[1] = 0.0                    # 1 tPA     SET tPA conc here!
+    sfa[1] = 4.0                    # 1 tPA     SET tPA conc here!
     sfa[2] = 0.5                    # 2 PAI1    calculated from literature
     sfa[3] = visit_df[i,:TAFI]      # 3 TAFI
     sfa[4] = visit_df[i,:AT]        # 4 AT  
@@ -25,11 +25,17 @@ function performance(κ, model::BSTModel, visit_df::DataFrame,i::Int64)
     model.initial_condition_array = xₒ
     
     #get the parameters -
-    tmp_alpha = κ[1:end-12]
-    g = κ[end-11:end]
+    tmp_alpha = κ[1:5]
+    g = κ[6:end]
 
     # set new parameters -
-    model.α = tmp_alpha;
+    α = model.α
+    α[1] = tmp_alpha[1]
+    α[2] = tmp_alpha[2]
+    α[3] = tmp_alpha[3]
+    α[4] = tmp_alpha[4]
+    α[5] = tmp_alpha[5] 
+    
 
     # set G values -
     G = model.G;
@@ -64,20 +70,20 @@ function performance(κ, model::BSTModel, visit_df::DataFrame,i::Int64)
  
     # adjusting parameters for r5
     G[Plasmin_idx,5] = g[10]   
-    G[TAFI_idx,5] = g[11]  
+    G[TAFI_idx,5] = -1*g[11]  
     G[FIa_idx,5] = g[12]
 
-    model.G = G;
+    
+  #  print("G = ", model.G, "\n")
 
     # solve -
     (T,U) = evaluate_w_delay(model, tspan = (0.0, 180.0))
     CF = Array{Float64,1}
     CF = amplitude(T,U[:,4],sfa[1],U[:,3],xₒ[1])
-    clot_firmness = transpose(CF)
     idx = findfirst(x->x==90,T)
 
     # test -
-    return integrate(T[1:idx],clot_firmness[1:idx])    # AUC
+    return integrate(T[1:idx], CF[1:idx])    # AUC
 end
 
 # build the model structure -
@@ -100,35 +106,37 @@ visit_df = filter(:Visit => x->(x==visit), training_df)
 # size of training set -
 (R,C) = size(visit_df)
 
-α = model.α
-α[1] = 4.0
-α[2] = 0.5
-α[3] = 10.0
-α[4] = 0.03
-α[5] = 0.02
+a = [0.5, 0.5, 0.5, 0.02, 0.03]
 
 #update G -
-g = [0.9, 0.9, 1.1, 0.05, 0.5, 2.0, 0.9, 0.8, 0.9, 0.8, 0.1, 0.45] # look at sample_ensemble.jl for specific G values
+# G = model.G
+g = [0.9, 0.9, 1.1, 0.05, 0.5, 2.0, 0.9, 0.8, 0.9, 0.75, 0.75, 0.9] # look at sample_ensemble.jl for specific G values
 
 # fusion -
-κ = vcat(α,g)
+parameters = vcat(a,g)
 
-NP = length(κ)
+np = length(parameters)
 
-L = zeros(NP)
-U = zeros(NP)
-for pᵢ ∈ 1:(NP)
-    L[pᵢ] = 0.1*κ[pᵢ]
-    U[pᵢ] = 10.0*κ[pᵢ]
+L = zeros(np)
+U = zeros(np)
+for pᵢ ∈ 1:(np)
+    L[pᵢ] = 0.01*parameters[pᵢ]
+    U[pᵢ] = 1.0*parameters[pᵢ]
 end
 #L[end] = -3.0;
 #U[end] = 0.0;
 
-# setup call to Morris method -
-F(κ) =  performance(κ, model, visit_df, 1)
-m = morris(F, L, U);
+patient_index = 1;
+samples = 1000
 
-# m = gsa(F, Morris(num_trajectory=10000), [[L[i],U[i]] for i in 1:(NP)]);
+# setup call to Morris method -
+F(parameters) =  performance(parameters, model, visit_df, patient_index)
+# m = morris(F, L, U, number_of_samples=10000);
+m = gsa(F, Morris(num_trajectory=samples), [[L[i],U[i]] for i in 1:np], relative_scale = true);
+means = transpose(m.means)
+means_star =  transpose(m.means_star)
+variances = transpose(m.variances)
+results_array = hcat(means, means_star, variances)
 
 # dump sensitivity data to disk -
-# jldsave("Sensitivity-Morris-P1-V4.jld2"; mean=m.means, variance=m.variances)
+ CSV.write(joinpath(pwd(),"data","Sensitivity-Morris-test-$(samples).csv"), Tables.table(results_array), header = vcat("mean", "mean_star","variance"))
