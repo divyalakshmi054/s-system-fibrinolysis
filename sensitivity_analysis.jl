@@ -29,12 +29,7 @@ function performance(κ, model::BSTModel, visit_df::DataFrame, i::Int64)
     g = κ[6:end]
 
     # set new parameters -
-    α = model.α
-    α[1] = tmp_alpha[1]
-    α[2] = tmp_alpha[2]
-    α[3] = tmp_alpha[3]
-    α[4] = tmp_alpha[4]
-    α[5] = tmp_alpha[5] 
+    model.α = tmp_alpha;
     
 
     # set G values -
@@ -73,8 +68,8 @@ function performance(κ, model::BSTModel, visit_df::DataFrame, i::Int64)
     G[TAFI_idx,5] = -1*g[11]  
     G[FIa_idx,5] = g[12]
 
-    
-  #  print("G = ", model.G, "\n")
+    # put it back -
+    model.G = G;
 
     # solve -
     (T,U) = evaluate_w_delay(model, tspan = (0.0, 180.0))
@@ -127,7 +122,7 @@ end
 #U[end] = 0.0;
 
 patient_index = 1;
-samples = 1000
+samples = 1000;
 
 # setup call to Morris method -
 F(parameters) =  performance(parameters, model, visit_df, patient_index)
