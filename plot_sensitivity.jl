@@ -71,15 +71,16 @@ function visualize(data_array,x_axis_ticks,y_axis_ticks,y_label_array)
     ax.set_yticklabels(y_label_array, fontsize=10,fontname="Arial")
     subplots_adjust(left=0.25)
 
-    # create x-label array -
-    x_label_array = ["S$(x)" for x=1:number_of_cols]
-    #ax.set_xticklabels(x_label_array, rotation=45,fontsize=8)
+    # create x-label array - 
+    x_label_array = ["μ*","var"]
+    # ax.set_xticklabels(x_label_array, rotation=45,fontsize=8)
     ax.spines["right"].set_visible(false)
     ax.spines["top"].set_visible(false)
     ax.spines["bottom"].set_visible(false)
     #ax.spines["left"].set_visible(false)
 
-    ax.get_xaxis().set_visible(false)
+
+    ax.get_xaxis().set_visible(true)
 
     for col_index = 1:number_of_cols
 

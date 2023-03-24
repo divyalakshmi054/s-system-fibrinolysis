@@ -115,14 +115,14 @@ np = length(parameters)
 L = zeros(np)
 U = zeros(np)
 for pᵢ ∈ 1:(np)
-    L[pᵢ] = 0.01*parameters[pᵢ]
+    L[pᵢ] = 0.1*parameters[pᵢ]
     U[pᵢ] = 1.0*parameters[pᵢ]
 end
 #L[end] = -3.0;
 #U[end] = 0.0;
 
 patient_index = 1;
-samples = 1000;
+samples = 10000;
 
 # setup call to Morris method -
 F(parameters) =  performance(parameters, model, visit_df, patient_index)
