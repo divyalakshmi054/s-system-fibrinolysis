@@ -186,7 +186,7 @@ function reduce(path_to_sensitivity_array::String; epsilon::Float64=1e-2)
 
     # the parameters are on the rows - are any values abpove a threshold -
     (NR,NC) = size(sensitivity_array)
- #=    for row_index = 1:NR
+    for row_index = 1:NR
         
         # get the row data -
         row_data = sensitivity_array[row_index, :]
@@ -195,10 +195,10 @@ function reduce(path_to_sensitivity_array::String; epsilon::Float64=1e-2)
         
             push!(index_keep_p, row_index)
        
-    end =#
+    end
 
     # pull out rows -
-    reduced_array = sensitivity_array[:, 2:end]
+    reduced_array = sensitivity_array[index_keep_p, 2:end]
   
     # last thing - lets put things in groups of 0,1,2,3 (or none,low,medium,high)
     (NR,NC) = size(reduced_array)
