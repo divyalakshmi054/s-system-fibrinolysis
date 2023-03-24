@@ -189,7 +189,7 @@ function reduce(path_to_sensitivity_array::String; epsilon::Float64=1e-2)
     for row_index = 1:NR
         
         # get the row data -
-        row_data = sensitivity_array[row_index, :]
+        row_data = sensitivity_array[row_index, 2:end]
         
         # check -
         idx_check = findall(x->x>=epsilon, row_data)
@@ -197,7 +197,7 @@ function reduce(path_to_sensitivity_array::String; epsilon::Float64=1e-2)
             push!(index_keep_p, row_index)
         end
     end
-    
+
     # pull out rows -
     reduced_array = sensitivity_array[index_keep_p, 2:end]
   
