@@ -2,6 +2,8 @@ using DelimitedFiles
 using Statistics
 using PyPlot
 using PyCall
+using CSV
+using DataFrames
 @pyimport matplotlib.patches as patches
 
 # define my colors -
@@ -155,11 +157,12 @@ function visualize(data_array,x_axis_ticks,y_axis_ticks,y_label_array)
     axis("square")
 end
 
+
 function reduce(path_to_sensitivity_array::String; epsilon::Float64=1e-2)
 
     # parameter name array =
     parameter_name_array = [
-		"α[1]"    ,  # 5
+		# "α[1]"    ,  # 5
         "α[2]"    ,  # 5
         "α[3]"    ,  # 5
         "α[4]"    ,  # 5
@@ -176,10 +179,10 @@ function reduce(path_to_sensitivity_array::String; epsilon::Float64=1e-2)
         "G[Plasmin,5]"   ,
         "G[TAFI,5]"   ,
         "G[FIa,5]"
-
      ];
     # load -
-    sensitivity_array = readdlm(path_to_sensitivity_array)
+    # sensitivity_array = readdlm(path_to_sensitivity_array,',')
+    sensitivity_array = CSV.read(path_to_sensitivity_array, DataFrame)
 
     # parameters to kepp -
     index_keep_p = Int64[]
@@ -189,17 +192,17 @@ function reduce(path_to_sensitivity_array::String; epsilon::Float64=1e-2)
     for row_index = 1:NR
         
         # get the row data -
-        row_data = sensitivity_array[row_index, 2:end]
+        row_data = sensitivity_array[row_index, :]
         
         # check -
-        idx_check = findall(x->x>=epsilon, row_data)
+        idx_check = findall(x->x>0, row_data)
         if (isempty(idx_check) == false)
             push!(index_keep_p, row_index)
-        end
+         end
     end
 
     # pull out rows -
-    reduced_array = sensitivity_array[index_keep_p, 2:end]
+    reduced_array = sensitivity_array[index_keep_p, :]
   
     # last thing - lets put things in groups of 0,1,2,3 (or none,low,medium,high)
     (NR,NC) = size(reduced_array)
