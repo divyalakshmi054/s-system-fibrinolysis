@@ -25,12 +25,15 @@ function performance(κ, model::BSTModel, visit_df::DataFrame, i::Int64)
     model.initial_condition_array = xₒ
     
     #get the parameters -
-    tmp_alpha = κ[1:5]
-    g = κ[6:end]
+    tmp_alpha = κ[1:3]
+    g = κ[4:end]
 
     # set new parameters -
-    model.α = tmp_alpha;
-    
+    α = model.α
+    α[2] = tmp_alpha[1]
+    α[4] = tmp_alpha[2]
+    α[5] = tmp_alpha[3]
+    model.α = α
 
     # set G values -
     G = model.G;
@@ -101,7 +104,7 @@ visit_df = filter(:Visit => x->(x==visit), training_df)
 # size of training set -
 (R,C) = size(visit_df)
 
-a = [0.5, 0.5, 0.5, 0.02, 0.03]
+a = [0.5, 0.02, 0.03]
 
 #update G -
 # G = model.G
@@ -115,19 +118,19 @@ np = length(parameters)
 L = zeros(np)
 U = zeros(np)
 for pᵢ ∈ 1:(np)
-    L[pᵢ] = 0.1*parameters[pᵢ]
-    U[pᵢ] = 1.0*parameters[pᵢ]
+    L[pᵢ] = 0.5*parameters[pᵢ]
+    U[pᵢ] = 2.0*parameters[pᵢ]
 end
 #L[end] = -3.0;
 #U[end] = 0.0;
 
 patient_index = 1;
-samples = 10000;
+samples = 1000;
 
 # setup call to Morris method -
 F(parameters) =  performance(parameters, model, visit_df, patient_index)
 # m = morris(F, L, U, number_of_samples=10000);
-m = gsa(F, Morris(num_trajectory=samples), [[L[i],U[i]] for i in 1:np], relative_scale = true);
+m = gsa(F, Morris(num_trajectory=samples), [[L[i],U[i]] for i in 1:np], relative_scale = false);
 means = transpose(m.means)
 means_star =  transpose(m.means_star)
 variances = transpose(m.variances)
