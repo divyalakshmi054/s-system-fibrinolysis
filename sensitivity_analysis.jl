@@ -25,14 +25,15 @@ function performance(κ, model::BSTModel, visit_df::DataFrame, i::Int64)
     model.initial_condition_array = xₒ
     
     #get the parameters -
-    tmp_alpha = κ[1:3]
-    g = κ[4:end]
+    tmp_alpha = κ[1:5]
+    g = κ[6:end]
 
     # set new parameters -
     α = model.α
-    α[2] = tmp_alpha[1]
+    α = tmp_alpha
+    #= α[2] = tmp_alpha[1]
     α[4] = tmp_alpha[2]
-    α[5] = tmp_alpha[3]
+    α[5] = tmp_alpha[3] =#
     model.α = α
 
     # set G values -
@@ -68,7 +69,7 @@ function performance(κ, model::BSTModel, visit_df::DataFrame, i::Int64)
  
     # adjusting parameters for r5
     G[Plasmin_idx,5] = g[10]   
-    G[TAFI_idx,5] = -1*g[11]  
+    G[TAFI_idx,5] = -g[11]  
     G[FIa_idx,5] = g[12]
 
     # put it back -
@@ -104,7 +105,7 @@ visit_df = filter(:Visit => x->(x==visit), training_df)
 # size of training set -
 (R,C) = size(visit_df)
 
-a = [0.5, 0.02, 0.03]
+a = [0.5, 0.5, 0.5, 0.02, 0.03]
 
 #update G -
 # G = model.G
@@ -112,13 +113,22 @@ g = [0.9, 0.9, 1.1, 0.05, 0.5, 2.0, 0.9, 0.8, 0.9, 0.75, 0.75, 0.9] # look at sa
 
 # fusion -
 parameters = vcat(a,g)
+low = minimum(parameters)
+high = maximum(parameters)
 
+norm_params = Array{Float64}(undef,(17,1))
+
+for i ∈ 1:17
+    norm_params[i] = (parameters[i] - 0.0)/(high - 0.0)
+end
+
+parameters = norm_params
 np = length(parameters)
 
 L = zeros(np)
 U = zeros(np)
 for pᵢ ∈ 1:(np)
-    L[pᵢ] = 0.5*parameters[pᵢ]
+    L[pᵢ] = 0.1*parameters[pᵢ]
     U[pᵢ] = 2.0*parameters[pᵢ]
 end
 #L[end] = -3.0;

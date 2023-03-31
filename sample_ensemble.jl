@@ -16,7 +16,7 @@ path_to_training_data = joinpath(_PATH_TO_DATA, "Training-Composition-Transforme
 training_df = CSV.read(path_to_training_data, DataFrame)
 
 # which visit?
-visit = 4
+visit = 2
 
 #let's filter visit 4s since we look to train using that visit
 visit_df = filter(:Visit => x->(x==visit), training_df) 
@@ -33,7 +33,7 @@ for i ∈ 1:R
 
     # setup static -
     sfa = dd.static_factors_array
-    sfa[1] = 0.0                    # 1 tPA     SET tPA conc here!
+    sfa[1] = 4.0                    # 1 tPA     SET tPA conc here!
     sfa[2] = 0.5                    # 2 PAI1; calculated from literature
     sfa[3] = visit_df[i,:TAFI]   # 3 TAFI
     sfa[4] = visit_df[i,:AT]     # 4 AT  

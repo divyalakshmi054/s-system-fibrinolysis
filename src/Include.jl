@@ -13,6 +13,7 @@ using Optim
 using Colors
 using JLD2
 using QuadGK
+using QuasiMonteCarlo
 
 # my files -
 include("Amplitude.jl")
