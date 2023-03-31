@@ -4,7 +4,7 @@ include("Include.jl")
 visit = 4
 
 # tpa level?
-tpa = 0
+tpa = 4
 
 # loading up simulation data -
 _PATH_TO_TMP_ = joinpath(pwd(),"tmp")
@@ -24,7 +24,7 @@ end
 # load real data
 
  _PATH_TO_REAL_DATA = joinpath(pwd(),"data")
- _PATH_TO_SORTED_REAL_DATA = joinpath(_PATH_TO_REAL_DATA, "sorted-no-time")
+ _PATH_TO_SORTED_REAL_DATA = joinpath(_PATH_TO_REAL_DATA, "sorted")
 
 real_plot = CSV.read((joinpath(_PATH_TO_SORTED_REAL_DATA, "REAL-visit-$(visit)-TEG-$(tpa)-nM-tPA.csv")),DataFrame)
 

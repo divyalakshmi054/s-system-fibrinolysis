@@ -163,23 +163,17 @@ function reduce(path_to_sensitivity_array::String; epsilon::Float64=1e-2)
 
     # parameter name array =
     parameter_name_array = [
-		# "α[1]"    ,  # 5
+		"α[1]"    ,  # 5
         "α[2]"    ,  # 5
         "α[3]"    ,  # 5
-        "α[4]"    ,  # 5
-        "α[5]"    ,  # 5
-        "G[FII, r1]"              ,  # 6
-        "G[FIIa, r1]"      ,  # 7
-        "G[FIIa, r2]"           ,  # 8
-        "G[AT, r2]"                 ,  # 9
-        "G[FIIa, 3]" ,
-        "G[FI, 3]"       ,  # 11
-        "G[tPA,4]"   , 
-        "G[Plgn,4]" ,
-        "G[PAI1,4]" ,
-        "G[Plasmin,5]"   ,
-        "G[TAFI,5]"   ,
-        "G[FIa,5]"
+        "G[FIIa, r1]" ,
+        "G[FI, r1]"       ,  # 11
+        "G[tPA, r2]"   , 
+        "G[Plgn, r2]" ,
+        "G[PAI1, r2]" ,
+        "G[Plasmin, r3]"   ,
+        "G[TAFI, r3]"   ,
+        "G[FIa, r3]"
      ];
     # load -
     # sensitivity_array = readdlm(path_to_sensitivity_array,',')

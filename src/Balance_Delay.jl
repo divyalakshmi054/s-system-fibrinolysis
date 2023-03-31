@@ -4,11 +4,11 @@ include("Include.jl")
 function _balances_delay_term(dx, x, p, t)
 
     # delay term -
-    delay_term = 1 - 1/(1+exp(0.1*(t-60)))
+    # delay_term = 1 - 1/(1+exp(0.1*(t-60)))
 
     # grab data from the parameter vector 
     α = p[1]                            # rate constant vector                        
-    α[1] = delay_term                   # FIIa
+    # α[1] = delay_term                 # FIIa
     G = p[2]                            # exponent array
     S = p[3]                            # stoichoimetric array
     number_of_dynamic_states = p[4]     # number of dynamic states
@@ -21,6 +21,7 @@ function _balances_delay_term(dx, x, p, t)
     end
         
     # build the "state" array (dynamic | static)
+    static_factors_array[5] = thrombin(t,FIIa_itp)
     state_array = vcat(x,static_factors_array)
 
     # compute the kinetics - powerlaw

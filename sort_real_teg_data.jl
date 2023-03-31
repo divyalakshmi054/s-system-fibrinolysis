@@ -78,7 +78,7 @@ v4_yes_tpa_plot = v4_yes_tpa_plot[:,2:end]
 v4_yes_tpa_plot = insertcols!(v4_yes_tpa_plot, 1, :Time_sec => real_t)
 
 # dump sorted real data
-_PATH_TO_SORTED_REAL_DATA = joinpath(_PATH_TO_REAL_DATA, "sorted-no-time")
+_PATH_TO_SORTED_REAL_DATA = joinpath(_PATH_TO_REAL_DATA, "sorted")
 
 CSV.write(joinpath(_PATH_TO_SORTED_REAL_DATA, "REAL-allvisit-TEG-0-nM-tPA.csv"), no_tpa_plot)
 CSV.write(joinpath(_PATH_TO_SORTED_REAL_DATA, "REAL-allvisit-TEG-4-nM-tPA.csv"), yes_tpa_plot)
